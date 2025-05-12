@@ -5,8 +5,6 @@ const childProcess = require("child_process");
 const myEnv = dotenv.config({ path: ".env" });
 dotenvExpand.expand(myEnv);
 
-console.log("APP_PORT:", process.env.APP_PORT);
-
 const env = {
   ...process.env,
   PORT: process.env.APP_PORT,
