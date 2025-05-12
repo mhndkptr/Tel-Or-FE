@@ -2,6 +2,8 @@
 
 Ever wished for a web app that's as smooth as a perfectly whisked egg? Well, crack no further! **Telor** is here, a delightful project built with the blazing-fast Next.js framework, ready to hatch a fantastic user experience.
 
+## **✨ You can see Telor live in action at: [telor.muhhendikaputra.my.id](https://telor.muhhendikaputra.my.id)** ✨
+
 ## ✨ What Makes Telor So Egg-cellent? ✨
 
 Telor isn't just another web app; it's a carefully crafted blend of cutting-edge technologies designed for performance and a delightful user interface. We've meticulously chosen each ingredient to ensure a seamless and enjoyable experience.
