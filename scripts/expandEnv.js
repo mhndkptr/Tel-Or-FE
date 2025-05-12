@@ -7,5 +7,10 @@ dotenvExpand.expand(myEnv);
 
 console.log("APP_PORT:", process.env.APP_PORT);
 
+const env = {
+  ...process.env,
+  PORT: process.env.APP_PORT,
+};
+
 const script = process.argv.slice(2).join(" ");
-childProcess.execSync(script, { stdio: "inherit", env: process.env });
+childProcess.execSync(script, { stdio: "inherit", env: env });

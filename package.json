@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node scripts/expandEnv.js cross-env PORT=$APP_PORT next dev",
-    "start": "node scripts/expandEnv.js cross-env PORT=$APP_PORT next start",
+    "dev": "node scripts/expandEnv.js cross-env next dev",
+    "start": "node scripts/expandEnv.js cross-env next start",
     "build": "next build",
     "lint": "next lint"
   },
