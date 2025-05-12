@@ -1,0 +1,13 @@
+# /contexts
+
+This folder stores React Context providers and related logic.
+
+Examples:
+- AuthContext for managing login state
+- ThemeContext for dark/light mode
+- Global settings or user preferences
+
+Each context file should include:
+- Context creation
+- Provider component
+- Custom hook (e.g., `useAuth`)

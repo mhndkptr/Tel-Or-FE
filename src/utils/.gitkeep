@@ -1,0 +1,11 @@
+# /utils
+
+Utility functions and helpers that are not React-specific go here.
+
+Examples:
+- Date formatters
+- Validation functions
+- API response handlers
+- Constants (optional)
+
+Keep utilities pure and unit-testable.

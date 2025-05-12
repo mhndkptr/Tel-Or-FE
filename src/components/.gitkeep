@@ -1,0 +1,11 @@
+# /components
+
+This folder contains all reusable React components used throughout the application.
+
+Examples:
+- Buttons
+- Form elements
+- Layout components (headers, footers, cards, etc.)
+- Modals, Alerts
+
+Organize components by feature or type to maintain modularity and reusability.

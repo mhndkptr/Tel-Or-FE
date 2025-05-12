@@ -1,0 +1,10 @@
+# /hooks
+
+This directory is for custom React hooks used in the application.
+
+Examples:
+- `useDebounce`
+- `useWindowSize`
+- `useUserSession`
+
+Naming convention: start with "use" and be specific. Keep logic isolated and reusable.
