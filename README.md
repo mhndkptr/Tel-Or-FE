@@ -26,8 +26,8 @@ Follow these simple steps to get Telor running locally:
 1.  **Clone the Nest:**
 
     ```bash
-    git clone [your-repository-url]
-    cd Telor
+    git clone https://github.com/mhndkptr/Tel-Or-FE.git
+    cd Tel-Or-FE
     ```
 
 2.  **Gather the Ingredients (Install Dependencies):**
@@ -41,7 +41,7 @@ Follow these simple steps to get Telor running locally:
     ```
 
 3.  **Whisper the Secrets (Environment Variables):**
-    Create a `.env.local` file in the root of the project and add any necessary environment-specific configurations (like API keys). Check out the `.env.example` file for guidance, if available.
+    Create a `.env.local` or `.env` file in the root of the project and add any necessary environment-specific configurations (like API keys). Check out the `.env.example` file for guidance, if available.
 
 4.  **Ignite the Incubator (Run the Development Server):**
 
