@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Navbar() {
+export default function PublicNavbar() {
   return (
     <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">

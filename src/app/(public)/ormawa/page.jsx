@@ -4,11 +4,9 @@ import { Search, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-export default function Home() {
+export default function OrmawaPage() {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      
 
       {/* Main Content */}
       <main className="flex-1 container mx-auto px-4 py-8">
