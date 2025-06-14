@@ -114,6 +114,11 @@ body {
   font-family: var(--font-open-sans), sans-serif;
 }
 
+.tabs-list {
+  min-width: 100% !important;
+  display: flex !important;
+  justify-content: flex-start !important;
+}
 @utility centered-shadow {
   box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.15);
 }
