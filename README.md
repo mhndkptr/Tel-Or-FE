@@ -1,6 +1,6 @@
 # 🥚 **Telor** 🥚
 
-Ever wished for a web app that's as smooth as a perfectly whisked egg? Well, crack no further! **Telor** is here, a delightful project built with the blazing-fast Next.js framework, ready to hatch a fantastic user experience.
+Ever wished for a web app that's as smooth as a perfectly whisked egg? Well, crack no further! **Telor** is here, a delightful project built with the blazing-fast Next.js framework, ready to hatch a fantastic user experience..
 
 ## **✨ You can see Telor live in action at: [telor.muhhendikaputra.my.id](https://telor.muhhendikaputra.my.id)** ✨
 
