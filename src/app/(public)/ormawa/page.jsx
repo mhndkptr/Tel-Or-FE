@@ -21,9 +21,9 @@ export default function OrmawaPage() {
         </div>
 
         {/* Ormawa Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 border border-gray-300 p-4 rounded-lg">
           {[1, 2, 3, 4, 5, 6].map((item) => (
-            <div key={item} className="bg-gray-200 rounded-lg overflow-hidden">
+            <div key={item} className="bg-gray-200 rounded-lg overflow-hidden border border-gray-300 p-4 rounded-lg">
               <div className="bg-white p-4 flex justify-center">
                 <Image
                   src="/cci-logo.png"
@@ -38,7 +38,7 @@ export default function OrmawaPage() {
                 <p className="text-gray-700 mb-4">Lorem ipsum dolor sit amet</p>
                 <div className="flex justify-end">
                   <Button asChild variant="destructive" className="flex items-center gap-2">
-                    <Link href={`/detail/${item}`}>
+                    <Link href={`/ormawa/1`}>
                       Detail
                       <ExternalLink size={16} />
                     </Link>
