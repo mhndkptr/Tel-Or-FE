@@ -42,9 +42,9 @@ export default function LoginPage() {
   });
 
   return (
-    <div className="min-h-screen bg-white flex m-auto">
+    <div className="min-h-screen bg-greyDark-100 flex m-auto">
       <div className="flex justify-center md:items-center w-full">
-        <div className="grid lg:grid-cols-2 overflow-hidden rounded-lg min-h-[80%] md:max-w-[85%] md:centered-shadow">
+        <div className="grid lg:grid-cols-2 overflow-hidden rounded-lg min-h-[80%] md:max-w-[85%] md:centered-shadow bg-white">
           <div className="flex flex-col p-5 md:p-12">
             <div className="md:mb-6 mb-4">
               <Image
@@ -55,9 +55,7 @@ export default function LoginPage() {
                 className="md:mb-6 mb-4 w-[150px]"
               />
               <h1 className="lg:text-3xl text-2xl font-bold mb-2">Selamat Datang!</h1>
-              <p className="text-gray-600 md:text-base text-sm">
-                Masuk untuk dapat mengelola data & informasi ormawa anda.
-              </p>
+              <p className="text-gray-600 md:text-base text-sm">Masuk untuk dapat mengelola ormawa anda.</p>
             </div>
 
             <Form {...loginFormConfig}>
