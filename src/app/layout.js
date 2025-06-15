@@ -1,5 +1,7 @@
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
+import { Bounce, ToastContainer } from "react-toastify";
+import { ReactQueryClientProvider } from "@/components/_core/config/ReactQueryClientProvider";
 
 const openSans = Open_Sans({
   variable: "--font-open-sans",
@@ -15,7 +17,24 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${openSans.variable} antialiased`}>{children}</body>
+      <body className={`${openSans.variable} antialiased`}>
+        <>
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            transition={Bounce}
+          />
+          <ReactQueryClientProvider>{children}</ReactQueryClientProvider>
+        </>
+      </body>
     </html>
   );
 }
