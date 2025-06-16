@@ -22,87 +22,6 @@ import { cn } from "@/lib/utils";
 import { useGetAllEvent } from "@/hooks/event.hooks";
 import EventCard from "@/components/_core/public/EventCard";
 
-const eventTypes = [
-  "Seminar",
-  "Lomba",
-  "Beasiswa",
-  "Company Visit",
-  "Open Recruitment",
-];
-
-const events = [
-  {
-    id: 1,
-    name: "Open Recruitment CCI 2024/2025",
-    category: "Open Recruitment",
-    description:
-      "Open Recruitment Central Computer Improvement untuk mahasiswa yang ingin bergabung dengan organisasi teknologi terdepan di kampus.",
-    startEvent: new Date("2025-06-17"),
-    endEvent: new Date("2025-06-20"),
-    photo: "/placeholder.svg?height=300&width=600",
-    content: "Detail lengkap tentang open recruitment CCI...", // Hidden from card
-  },
-  {
-    id: 2,
-    name: "Seminar Teknologi AI",
-    category: "Seminar",
-    description:
-      "Seminar tentang perkembangan teknologi AI terbaru dan implementasinya dalam industri modern.",
-    startEvent: new Date("2025-06-18"),
-    endEvent: new Date("2025-06-18"),
-    photo: "/placeholder.svg?height=300&width=600",
-    content: "Detail lengkap tentang seminar AI...", // Hidden from card
-  },
-  {
-    id: 3,
-    name: "Lomba Programming",
-    category: "Lomba",
-    description:
-      "Kompetisi programming untuk mahasiswa dengan berbagai kategori dan hadiah menarik.",
-    startEvent: new Date("2025-06-19"),
-    endEvent: new Date("2025-06-21"),
-    photo: "/placeholder.svg?height=300&width=600",
-    prize: 15000000, // Prize for Lomba category
-    content: "Detail lengkap tentang lomba programming...", // Hidden from card
-  },
-  {
-    id: 4,
-    name: "Beasiswa Prestasi 2025",
-    category: "Beasiswa",
-    description:
-      "Program beasiswa untuk mahasiswa berprestasi dengan berbagai kriteria dan benefit.",
-    startEvent: new Date("2025-07-01"),
-    endEvent: new Date("2025-07-31"),
-    photo: "/placeholder.svg?height=300&width=600",
-    prize: 25000000, // Prize for Beasiswa category
-    content: "Detail lengkap tentang beasiswa...", // Hidden from card
-  },
-  {
-    id: 5,
-    name: "Lomba Desain UI/UX",
-    category: "Lomba",
-    description:
-      "Kompetisi desain UI/UX untuk mahasiswa dengan tema aplikasi mobile modern.",
-    startEvent: new Date("2025-06-25"),
-    endEvent: new Date("2025-06-27"),
-    photo: "/placeholder.svg?height=300&width=600",
-    prize: 10000000, // Prize for Lomba category
-    content: "Detail lengkap tentang lomba desain...", // Hidden from card
-  },
-  {
-    id: 6,
-    name: "Beasiswa Unggulan",
-    category: "Beasiswa",
-    description:
-      "Beasiswa unggulan untuk mahasiswa dengan prestasi akademik dan non-akademik terbaik.",
-    startEvent: new Date("2025-08-01"),
-    endEvent: new Date("2025-08-31"),
-    photo: "/placeholder.svg?height=300&width=600",
-    prize: 50000000, // Prize for Beasiswa category
-    content: "Detail lengkap tentang beasiswa unggulan...", // Hidden from card
-  },
-];
-
 export default function EventPage() {
   const [selectedType, setSelectedType] = React.useState("");
   const { eventsData, isLoading, isPending, refetch } = useGetAllEvent();
@@ -110,6 +29,14 @@ export default function EventPage() {
     from: undefined,
     to: undefined,
   });
+
+  const eventTypes = [
+    "SEMINAR",
+    "LOMBA",
+    "BEASISWA",
+    "COMPANY VISIT",
+    "OPEN RECRUITMENT",
+  ];
 
   console.log("eventsData", eventsData);
 
@@ -123,7 +50,6 @@ export default function EventPage() {
     });
   };
 
-  // Reset filter functions
   const resetTypeFilter = () => {
     setSelectedType("");
   };
@@ -131,6 +57,25 @@ export default function EventPage() {
   const resetDateFilter = () => {
     setDateRange({ from: undefined, to: undefined });
   };
+
+  const filteredEvents = (eventsData || []).filter((event) => {
+    const typeMatch = selectedType ? event.eventType === selectedType : true;
+
+    let dateMatch = true;
+
+    if (dateRange && dateRange.from && dateRange.to) {
+      const eventStart = new Date(event.startEvent);
+      dateMatch = eventStart >= dateRange.from && eventStart <= dateRange.to;
+    } else if (dateRange && dateRange.from) {
+      const eventStart = new Date(event.startEvent);
+      dateMatch = eventStart >= dateRange.from;
+    } else if (dateRange && dateRange.to) {
+      const eventStart = new Date(event.startEvent);
+      dateMatch = eventStart <= dateRange.to;
+    }
+
+    return typeMatch && dateMatch;
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -160,14 +105,16 @@ export default function EventPage() {
                     className="flex items-center gap-2 text-sm"
                   >
                     <Filter className="h-4 w-4" />
-                    {selectedType || "Filter Tipe Event"}
+                    {selectedType
+                      ? selectedType.replace("_", " ")
+                      : "Filter Tipe Event"}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   {eventTypes.map((type) => (
                     <DropdownMenuItem
                       key={type}
-                      onSelect={() => setSelectedType(type)}
+                      onSelect={() => setSelectedType(type.toUpperCase())}
                     >
                       {type}
                     </DropdownMenuItem>
@@ -221,7 +168,9 @@ export default function EventPage() {
                     mode="range"
                     defaultMonth={dateRange.from}
                     selected={dateRange}
-                    onSelect={setDateRange}
+                    onSelect={(range) => {
+                      setDateRange(range || { from: undefined, to: undefined });
+                    }}
                     numberOfMonths={2}
                   />
                   {(dateRange.from || dateRange.to) && (
@@ -244,7 +193,7 @@ export default function EventPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {eventsData.map((event, index) => (
+          {(filteredEvents || []).map((event, index) => (
             <EventCard key={index} event={event} />
           ))}
         </div>
