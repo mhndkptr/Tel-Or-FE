@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useRouter } from "next/navigation";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { z } from "zod";
 import { useLoginMutation } from "@/hooks/auth.hooks";
@@ -27,13 +26,8 @@ const loginFormSchema = z.object({
 });
 
 export default function LoginPage() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const { loginMutation } = useLoginMutation({
-    successAction: () => {
-      router.push("/dashboard");
-    },
-  });
+  const { loginMutation } = useLoginMutation();
 
   const handleSubmit = (data) => {
     const payload = { email: data.email, password: data.password };
