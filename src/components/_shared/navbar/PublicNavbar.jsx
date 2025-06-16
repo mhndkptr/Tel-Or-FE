@@ -19,8 +19,8 @@ export default function PublicNavbar() {
             <Link href="/" className="text-gray-800 hover:text-red-600 font-medium">
               Home
             </Link>
-            <Link href="/media" className="text-gray-800 hover:text-red-600 font-medium">
-              Media
+            <Link href="/ormawa" className="text-gray-800 hover:text-red-600 font-medium">
+              Ormawa
             </Link>
             <Link href="/careers" className="text-gray-800 hover:text-red-600 font-medium">
               Careers
