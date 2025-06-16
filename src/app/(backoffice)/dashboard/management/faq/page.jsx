@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -12,14 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -36,18 +26,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Plus, Search, Edit, Trash2, Filter } from "lucide-react";
 import {
   useGetAllFaq,
@@ -55,6 +33,8 @@ import {
   useEditFaqMutation,
   useDeleteFaqMutation,
 } from "@/hooks/faq.hooks";
+import FaqForm from "@/components/core/faq/faq-form";
+import FaqTable from "@/components/core/faq/faq-table";
 
 export default function FAQManagement() {
   const categoriesObj = {
@@ -74,7 +54,6 @@ export default function FAQManagement() {
     category: "",
   });
 
-  // Hooks
   const { faqs, isLoading, refetch } = useGetAllFaq();
 
   const { addFaqMutation } = useAddFaqMutation({
@@ -97,7 +76,6 @@ export default function FAQManagement() {
     },
   });
 
-  // Filtering
   const filteredFaqs = (faqs || []).filter((faq) => {
     return (
       (searchTerm === "" ||
@@ -107,7 +85,6 @@ export default function FAQManagement() {
     );
   });
 
-  // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (editingFaq) {
@@ -130,7 +107,6 @@ export default function FAQManagement() {
     }
   };
 
-  // Edit handler
   const handleEdit = (faq) => {
     setEditingFaq(faq);
     setFormData({
@@ -141,19 +117,16 @@ export default function FAQManagement() {
     setIsDialogOpen(true);
   };
 
-  // Delete handler
   const handleDelete = (id) => {
     deleteFaqMutation.mutate({ faqId: id });
   };
 
-  // Reset form
   const resetForm = () => {
     setFormData({ question: "", answer: "", category: "" });
     setEditingFaq(null);
     setIsDialogOpen(false);
   };
 
-  // Badge color
   const getCategoryColor = (categoryKey) => {
     const label = categoriesObj[categoryKey];
     const colors = {
@@ -193,74 +166,17 @@ export default function FAQManagement() {
                     : "Tambahkan pertanyaan dan jawaban baru"}
                 </DialogDescription>
               </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="pertanyaan">Pertanyaan</Label>
-                  <Input
-                    id="pertanyaan"
-                    value={formData.question}
-                    onChange={(e) =>
-                      setFormData({ ...formData, question: e.target.value })
-                    }
-                    placeholder="Masukkan pertanyaan..."
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="jawaban">Jawaban</Label>
-                  <Textarea
-                    id="jawaban"
-                    value={formData.answer}
-                    onChange={(e) =>
-                      setFormData({ ...formData, answer: e.target.value })
-                    }
-                    placeholder="Masukkan jawaban..."
-                    rows={4}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="category">Kategori</Label>
-                  <Select
-                    value={formData.category}
-                    onValueChange={(value) =>
-                      setFormData({
-                        ...formData,
-                        category: value,
-                      })
-                    }
-                    required
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih kategori">
-                        {formData.category
-                          ? categoriesObj[formData.category]
-                          : ""}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(categoriesObj).map(([key, label]) => (
-                        <SelectItem key={key} value={key}>
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <DialogFooter>
-                  <Button type="button" variant="outline" onClick={resetForm}>
-                    Batal
-                  </Button>
-                  <Button
-                    type="submit"
-                    disabled={
-                      addFaqMutation.isPending || editFaqMutation.isPending
-                    }
-                  >
-                    {editingFaq ? "Update" : "Simpan"}
-                  </Button>
-                </DialogFooter>
-              </form>
+              <FaqForm
+                formData={formData}
+                setFormData={setFormData}
+                categoriesObj={categoriesObj}
+                onSubmit={handleSubmit}
+                onCancel={resetForm}
+                isPending={
+                  addFaqMutation.isPending || editFaqMutation.isPending
+                }
+                editingFaq={editingFaq}
+              />
             </DialogContent>
           </Dialog>
         </div>
@@ -322,91 +238,14 @@ export default function FAQManagement() {
                   Loading...
                 </div>
               ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-12">ID</TableHead>
-                      <TableHead>Pertanyaan</TableHead>
-                      <TableHead className="hidden md:table-cell">
-                        Jawaban
-                      </TableHead>
-                      <TableHead>Kategori</TableHead>
-                      <TableHead className="w-24">Aksi</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredFaqs.length === 0 ? (
-                      <TableRow>
-                        <TableCell
-                          colSpan={5}
-                          className="text-center py-8 text-muted-foreground"
-                        >
-                          Tidak ada FAQ yang ditemukan
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      filteredFaqs.map((faq) => (
-                        <TableRow key={faq.id}>
-                          <TableCell className="font-medium">
-                            {faq.id}
-                          </TableCell>
-                          <TableCell className="max-w-xs">
-                            <div className="truncate" title={faq.question}>
-                              {faq.question}
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell max-w-md">
-                            <div className="truncate" title={faq.answer}>
-                              {faq.answer}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge className={getCategoryColor(faq.category)}>
-                              {categoriesObj[faq.category] || faq.category}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleEdit(faq)}
-                              >
-                                <Edit className="w-4 h-4" />
-                              </Button>
-                              <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                  <Button variant="outline" size="sm">
-                                    <Trash2 className="w-4 h-4" />
-                                  </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                  <AlertDialogHeader>
-                                    <AlertDialogTitle>
-                                      Hapus FAQ
-                                    </AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                      Apakah Anda yakin ingin menghapus FAQ ini?
-                                      Tindakan ini tidak dapat dibatalkan.
-                                    </AlertDialogDescription>
-                                  </AlertDialogHeader>
-                                  <AlertDialogFooter>
-                                    <AlertDialogCancel>Batal</AlertDialogCancel>
-                                    <AlertDialogAction
-                                      onClick={() => handleDelete(faq.id)}
-                                    >
-                                      Hapus
-                                    </AlertDialogAction>
-                                  </AlertDialogFooter>
-                                </AlertDialogContent>
-                              </AlertDialog>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
+                <FaqTable
+                  faqs={filteredFaqs}
+                  isLoading={isLoading}
+                  getCategoryColor={getCategoryColor}
+                  categoriesObj={categoriesObj}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
               )}
             </div>
           </CardContent>
