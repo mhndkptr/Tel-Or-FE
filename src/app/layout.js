@@ -18,21 +18,6 @@ export const metadata = {
     width: 500,
     height: 500,
   },
-  openGraph: {
-    title: "Tel-Or | Tel-U Organization",
-    description:
-      "A website for student in Telkom University to explore student activity unit like organization, community, laboratory, etc.",
-    url: "https://telor.muhhendikaputra.my.id",
-    siteName: "Tel-Or",
-    images: [
-      {
-        url: "/assets/logos/logo-telkom-university-v.png",
-        width: 500,
-        height: 500,
-        alt: "Telkom University Logo",
-      },
-    ],
-  },
   icons: {
     icon: {
       url: "/assets/logos/logo-telkom-university-v.png",
