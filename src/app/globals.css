@@ -172,3 +172,12 @@ body {
 @utility centered-shadow {
   box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.15);
 }
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
