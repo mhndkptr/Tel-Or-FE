@@ -1,6 +1,7 @@
 import { fetch } from "@/utils/baseFetch";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { toast } from "react-toastify";
 
 export function useGetLandingPage() {
   const { data, isLoading, isPending, refetch } = useQuery({
