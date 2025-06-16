@@ -10,21 +10,16 @@ const openSans = Open_Sans({
 });
 
 export const metadata = {
-  "title": "Tel-Or | Tel-U Organization",
-  "description":
+  title: "Tel-Or | Tel-U Organization",
+  description:
     "A website for student in Telkom University to explore student activity unit like organization, community, laboratory, etc.",
-  "image": {
-    "url": "/assets/logos/logo-telkom-university-v.png",
-    "width": 500,
-    "height": 500
-  },
-  "icons": {
-    "icon": {
-      "url": "/assets/logos/logo-telkom-university-v.png",
-      "type": "image/png"
+  icons: {
+    icon: {
+      url: "/assets/logos/logo-telkom-university-v.png",
+      type: "image/png",
     },
-    "shortcut": { "url": "/assets/logos/logo-telkom-university-v.png", "type": "image/png" }
-  }
+    shortcut: { url: "/assets/logos/logo-telkom-university-v.png", type: "image/png" },
+  },
 };
 
 export default function RootLayout({ children }) {
