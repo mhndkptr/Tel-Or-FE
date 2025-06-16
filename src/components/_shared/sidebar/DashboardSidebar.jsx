@@ -100,6 +100,11 @@ export function DashboardSidebar() {
             href: "/dashboard/management/event",
             isActive: pathname.startsWith("/dashboard/management/event"),
           },
+          {
+            name: "User",
+            href: "/dashboard/management/user",
+            isActive: pathname.startsWith("/dashboard/management/user"),
+          },
         ],
       },
       {
