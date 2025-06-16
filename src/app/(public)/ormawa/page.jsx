@@ -14,7 +14,7 @@ export default function Home() {
         </h1>
 
         {/* Search Bar */}
-        <div className="relative mb-8 ">
+        <div className="relative mb-8">
           <Input type="text" placeholder="Search Ormawa..." className="w-full py-6" />
           <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
         </div>
@@ -25,7 +25,7 @@ export default function Home() {
           <div className="border-2 border-gray-300 rounded-3xl p-6 bg-white">
             <div className="text-center mb-4">
               <Image
-                  src="/BEM.png"
+                  src="/bem-logo.png"
                   alt="BEM Logo"
                   width={200}
                   height={200}
@@ -63,7 +63,7 @@ export default function Home() {
             </div>
 
             <Button asChild variant="destructive" className="w-full">
-              <Link href="/detail/bem">Detail</Link>
+              <Link href="/ormawa/bem">Detail</Link>
             </Button>
           </div>
 
@@ -72,12 +72,12 @@ export default function Home() {
             <div className="text-center mb-4">
               <Image
                   src="/HIMAIF.png"
-                  alt="HIMA Logo"
+                  alt="Central Computer Improvement Logo"
                   width={200}
                   height={200}
                   className="h-40 w-auto"
                 />
-              <div className="text-sm text-gray-600 mb-1">HMIF</div>
+              <div className="text-sm text-gray-600 mb-1">HIMA IF</div>
               <div className="text-sm text-gray-600">(Himpunan Mahasiswa Informatika)</div>
             </div>
 
@@ -109,7 +109,7 @@ export default function Home() {
             </div>
 
             <Button asChild variant="destructive" className="w-full">
-              <Link href="/detail/hmif">Detail</Link>
+              <Link href="/ormawa/hmif">Detail</Link>
             </Button>
           </div>
 
@@ -117,7 +117,7 @@ export default function Home() {
           <div className="border-2 border-gray-300 rounded-3xl p-6 bg-white">
             <div className="text-center mb-4">
               <Image
-                  src="/Robotika.png"
+                  src="/robotika.png"
                   alt="Robotika Logo"
                   width={200}
                   height={200}
@@ -155,7 +155,7 @@ export default function Home() {
             </div>
 
             <Button asChild variant="destructive" className="w-full">
-              <Link href="/detail/ukm-robotika">Detail</Link>
+              <Link href="/ormawa/ukm-robotika">Detail</Link>
             </Button>
           </div>
 
@@ -163,7 +163,7 @@ export default function Home() {
           <div className="border-2 border-gray-300 rounded-3xl p-6 bg-white">
             <div className="text-center mb-4">
               <Image
-                  src="/UKMSeni.png"
+                  src="/seni.png"
                   alt="Seni Logo"
                   width={200}
                   height={200}
@@ -201,14 +201,14 @@ export default function Home() {
             </div>
 
             <Button asChild variant="destructive" className="w-full">
-              <Link href="/detail/ukm-seni">Detail</Link>
+              <Link href="/ormawa/ukm-seni">Detail</Link>
             </Button>
           </div>
 
           <div className="border-2 border-gray-300 rounded-3xl p-6 bg-white">
             <div className="text-center mb-4">
               <Image
-                  src="/Olahraga.png"
+                  src="/olahraga.png"
                   alt="Olahraga Logo"
                   width={200}
                   height={200}
@@ -246,7 +246,7 @@ export default function Home() {
             </div>
 
             <Button asChild variant="destructive" className="w-full">
-              <Link href="/detail/ukm-olahraga">Detail</Link>
+              <Link href="/ormawa/ukm-olahraga">Detail</Link>
             </Button>
           </div>
 
@@ -259,11 +259,11 @@ export default function Home() {
                   height={200}
                   className="h-40 w-auto"
                 />
-              <div className="text-sm text-gray-600 mb-1">HMPS</div>
+              <div className="text-sm text-gray-600 mb-1">HMSI</div>
               <div className="text-sm text-gray-600">Sistem Informasi</div>
             </div>
 
-            <h3 className="font-bold text-lg text-center mb-3">HMPS Sistem Informasi</h3>
+            <h3 className="font-bold text-lg text-center mb-3">Himpunan Mahasiswa Sistem Informasi</h3>
 
             <div className="mb-4">
               <span className="inline-block bg-pink-200 text-pink-800 px-4 py-1 rounded-full text-sm font-medium w-full text-center">
@@ -286,12 +286,12 @@ export default function Home() {
                 <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                 </svg>
-                Ketua HMPS SI
+                Ketua HMSI
               </div>
             </div>
 
             <Button asChild variant="destructive" className="w-full">
-              <Link href="/detail/hmps-si">Detail</Link>
+              <Link href="/ormawa/hmps-si">Detail</Link>
             </Button>
           </div>
         </div>
