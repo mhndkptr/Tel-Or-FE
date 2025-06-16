@@ -1,129 +1,19 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Calendar, MapPin, Users, ChevronRight, MessageCircle, Phone } from "lucide-react"
+import { Calendar,  Users, ChevronRight, Phone } from "lucide-react"
+import { useGetLandingPage } from "@/hooks/landing.hooks"
+import { useRouter } from "next/navigation"
 
 export default function HomePage() {
-  const [landingData, setLandingData] = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    // Simulate API call to /api/landing
-    const fetchLandingData = async () => {
-      try {
-        // Mock data - replace with actual API call
-        const mockData = {
-          ormawaEvents: [
-            {
-              id: 1,
-              title: "Tech Innovation Summit 2024",
-              description: "Kompetisi inovasi teknologi terbesar di Telkom University dengan hadiah jutaan rupiah.",
-              date: "2024-03-15",
-              location: "Auditorium Telkom University",
-              organizer: "HMIF (Himpunan Mahasiswa Informatika)",
-              image: "/placeholder.svg?height=200&width=300",
-            },
-            {
-              id: 2,
-              title: "Digital Marketing Workshop",
-              description:
-                "Workshop intensif digital marketing untuk mahasiswa yang ingin mengembangkan skill pemasaran digital.",
-              date: "2024-03-20",
-              location: "Lab Komputer Gedung B",
-              organizer: "HMSI (Himpunan Mahasiswa Sistem Informasi)",
-              image: "/placeholder.svg?height=200&width=300",
-            },
-            {
-              id: 3,
-              title: "Entrepreneurship Bootcamp",
-              description: "Bootcamp kewirausahaan dengan mentor dari startup unicorn Indonesia.",
-              date: "2024-03-25",
-              location: "Ruang Seminar Lantai 3",
-              organizer: "BEM (Badan Eksekutif Mahasiswa)",
-              image: "/placeholder.svg?height=200&width=300",
-            },
-          ],
-          ormawaOrganizations: [
-            {
-              id: 1,
-              name: "BEM (Badan Eksekutif Mahasiswa)",
-              description:
-                "Organisasi tertinggi kemahasiswaan yang mengkoordinir seluruh kegiatan mahasiswa di Telkom University.",
-              category: "Eksekutif",
-              memberCount: 150,
-              logo: "/placeholder.svg?height=100&width=100",
-              contactPerson: "President BEM",
-            },
-            {
-              id: 2,
-              name: "HMIF (Himpunan Mahasiswa Informatika)",
-              description: "Wadah aspirasi dan pengembangan mahasiswa Program Studi Teknik Informatika.",
-              category: "Himpunan",
-              memberCount: 200,
-              logo: "/placeholder.svg?height=100&width=100",
-              contactPerson: "Ketua HMIF",
-            },
-            {
-              id: 3,
-              name: "UKM Robotika",
-              description: "Unit Kegiatan Mahasiswa yang fokus pada pengembangan teknologi robotika dan AI.",
-              category: "UKM",
-              memberCount: 80,
-              logo: "/placeholder.svg?height=100&width=100",
-              contactPerson: "Ketua UKM Robotika",
-            },
-          ],
-          faqs: [
-            {
-              id: 1,
-              question: "Apa itu Ormawa di Telkom University?",
-              answer:
-                "Ormawa (Organisasi Kemahasiswaan) adalah organisasi yang dibentuk oleh dan untuk mahasiswa sebagai wadah pengembangan minat, bakat, dan potensi diri. Di Telkom University, terdapat berbagai jenis ormawa seperti BEM, Himpunan, UKM, dan organisasi lainnya.",
-            },
-            {
-              id: 2,
-              question: "Bagaimana cara bergabung dengan Ormawa?",
-              answer:
-                "Untuk bergabung dengan Ormawa, mahasiswa dapat mengikuti open recruitment yang biasanya diadakan di awal semester. Informasi recruitment akan diumumkan melalui media sosial resmi masing-masing organisasi dan portal mahasiswa.",
-            },
-            {
-              id: 3,
-              question: "Apa manfaat bergabung dengan Ormawa?",
-              answer:
-                "Bergabung dengan Ormawa memberikan banyak manfaat seperti pengembangan soft skills, networking, pengalaman organisasi, sertifikat kegiatan, dan kesempatan untuk mengembangkan leadership skills.",
-            },
-            {
-              id: 4,
-              question: "Apakah ada biaya untuk bergabung dengan Ormawa?",
-              answer:
-                "Sebagian besar Ormawa di Telkom University tidak mengenakan biaya keanggotaan. Namun, untuk kegiatan tertentu mungkin ada kontribusi atau biaya partisipasi yang akan diinformasikan sebelumnya.",
-            },
-            {
-              id: 5,
-              question: "Bagaimana cara mendapatkan informasi event Ormawa terbaru?",
-              answer:
-                "Informasi event Ormawa dapat diperoleh melalui website resmi Telkom University, media sosial masing-masing organisasi, portal mahasiswa, dan pengumuman di kampus.",
-            },
-          ],
-        }
-
-        setLandingData(mockData)
-        setLoading(false)
-      } catch (error) {
-        console.error("Error fetching landing data:", error)
-        setLoading(false)
-      }
-    }
-
-    fetchLandingData()
-  }, [])
-
-  if (loading) {
+  const {isLoading, isPending, landingPageData} = useGetLandingPage()
+  const router = useRouter()
+console.log("Landing Page Data:", landingPageData)
+  if (isLoading || isPending) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-red-600"></div>
@@ -149,13 +39,16 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/event">
-            <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white">
+            <Button size="lg" className="bg-red-600 cursor-pointer hover:bg-red-700 text-white">
               Jelajahi Event
               <ChevronRight className="ml-2 h-4 w-4" />
             </Button></Link>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white text-gray-900">
+            <Link href="#events">
+            
+            <Button size="lg" variant="outline" className="cursor-pointer border-white text-white hover:bg-white text-gray-900">
               Pelajari Lebih Lanjut
             </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -172,20 +65,20 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {landingData?.ormawaEvents.slice(0, 3).map((event) => (
-              <Card key={event.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+            {landingPageData?.latestEvents?.slice(0, 3).map((item) => (
+              <Card key={item.eventId} className="overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="aspect-video relative">
-                  <Image src={event.image || "/placeholder.svg"} alt={event.title} fill className="object-cover" />
+                  <Image src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${item.image}` || "/placeholder.svg"} alt={item.eventName} fill className="object-cover" />
                 </div>
                 <CardHeader>
-                  <CardTitle className="text-xl font-bold text-gray-900">{event.title}</CardTitle>
-                  <CardDescription className="text-gray-600">{event.description}</CardDescription>
+                  <CardTitle className="text-xl font-bold text-gray-900">{item.eventName}</CardTitle>
+                  {/* <CardDescription className="text-gray-600">{item.description}</CardDescription> */}
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
                     <div className="flex items-center text-sm text-gray-500">
                       <Calendar className="h-4 w-4 mr-2" />
-                      {new Date(event.date).toLocaleDateString("id-ID", {
+                      {new Date(item.startEvent).toLocaleDateString("id-ID", {
                         weekday: "long",
                         year: "numeric",
                         month: "long",
@@ -193,15 +86,11 @@ export default function HomePage() {
                       })}
                     </div>
                     <div className="flex items-center text-sm text-gray-500">
-                      <MapPin className="h-4 w-4 mr-2" />
-                      {event.location}
-                    </div>
-                    <div className="flex items-center text-sm text-gray-500">
                       <Users className="h-4 w-4 mr-2" />
-                      {event.organizer}
+                      "Ini diisi organizernya"
                     </div>
                   </div>
-                  <Button className="w-full mt-4 bg-red-600 hover:bg-red-700">Daftar Sekarang</Button>
+                  <Button className="w-full mt-4 bg-red-600 hover:bg-red-700 cursor-pointer" onClick={() => router.push(`/event/${item.eventId}`)}>Lihat Detail</Button>
                 </CardContent>
               </Card>
             ))}
@@ -221,7 +110,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {landingData?.ormawaOrganizations.slice(0, 3).map((ormawa) => (
+            {landingPageData?.topOrmawa?.slice(0, 3).map((ormawa) => (
               <Card key={ormawa.id} className="overflow-hidden hover:shadow-lg transition-shadow bg-white">
                 <CardHeader className="text-center">
                   <div className="mx-auto mb-4">
@@ -269,7 +158,7 @@ export default function HomePage() {
           </div>
 
           <Accordion type="single" collapsible className="w-full">
-            {landingData?.faqs.map((faq) => (
+            {landingPageData?.latestFaqs?.map((faq) => (
               <AccordionItem key={faq.id} value={`item-${faq.id}`}>
                 <AccordionTrigger className="text-left font-semibold text-gray-900">{faq.question}</AccordionTrigger>
                 <AccordionContent className="text-gray-600 leading-relaxed">{faq.answer}</AccordionContent>
@@ -315,11 +204,6 @@ export default function HomePage() {
                 <li>
                   <Link href="#ormawa" className="hover:text-white">
                     Ormawa
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Media
                   </Link>
                 </li>
                 <li>

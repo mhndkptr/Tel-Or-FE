@@ -169,6 +169,7 @@ body {
   display: flex !important;
   justify-content: flex-start !important;
 }
+
 @utility centered-shadow {
   box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.15);
 }
@@ -176,6 +177,10 @@ body {
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply scroll-smooth;
   }
   body {
     @apply bg-background text-foreground;
