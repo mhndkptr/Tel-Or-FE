@@ -148,11 +148,12 @@ export default function HomePage() {
             potensi diri dan memperluas jaringan.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/event">
             <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white">
               Jelajahi Event
               <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900">
+            </Button></Link>
+            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white text-gray-900">
               Pelajari Lebih Lanjut
             </Button>
           </div>
@@ -261,7 +262,7 @@ export default function HomePage() {
       <section id="faq" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">MASIH ADA YANG KAMU MAU TANYA?</h2>
             <p className="text-lg text-gray-600">
               Temukan jawaban untuk pertanyaan yang sering diajukan tentang organisasi kemahasiswaan
             </p>
