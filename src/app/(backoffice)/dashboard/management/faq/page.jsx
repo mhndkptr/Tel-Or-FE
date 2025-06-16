@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -49,107 +49,120 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Plus, Search, Edit, Trash2, Filter } from "lucide-react";
+import {
+  useGetAllFaq,
+  useAddFaqMutation,
+  useEditFaqMutation,
+  useDeleteFaqMutation,
+} from "@/hooks/faq.hooks";
 
 export default function FAQManagement() {
-  const [faqs, setFaqs] = useState([
-    {
-      id: 1,
-      pertanyaan: "Bagaimana cara mendaftar akun baru?",
-      jawaban:
-        "Untuk mendaftar akun baru, klik tombol 'Daftar' di halaman utama, isi formulir dengan data yang diperlukan, dan verifikasi email Anda.",
-      category: "Akun",
-    },
-    {
-      id: 2,
-      pertanyaan: "Bagaimana cara reset password?",
-      jawaban:
-        "Klik 'Lupa Password' di halaman login, masukkan email Anda, dan ikuti instruksi yang dikirim ke email.",
-      category: "Akun",
-    },
-    {
-      id: 3,
-      pertanyaan: "Apakah ada biaya untuk menggunakan layanan ini?",
-      jawaban:
-        "Kami menyediakan paket gratis dengan fitur terbatas dan paket premium dengan fitur lengkap. Lihat halaman pricing untuk detail.",
-      category: "Pembayaran",
-    },
-    {
-      id: 4,
-      pertanyaan: "Bagaimana cara menghubungi customer support?",
-      jawaban:
-        "Anda dapat menghubungi kami melalui email support@example.com atau chat langsung di website.",
-      category: "Dukungan",
-    },
-  ]);
+  const categoriesObj = {
+    umum: "Umum",
+    bantuan: "Bantuan",
+    informasi: "Informasi",
+    event: "Event",
+  };
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingFaq, setEditingFaq] = useState(null);
   const [formData, setFormData] = useState({
-    pertanyaan: "",
-    jawaban: "",
+    question: "",
+    answer: "",
     category: "",
   });
 
-  const categories = ["Akun", "Pembayaran", "Dukungan", "Teknis", "Umum"];
+  // Hooks
+  const { faqs, isLoading, refetch } = useGetAllFaq();
 
-  const filteredFaqs = faqs.filter((faq) => {
-    const matchesSearch =
-      faq.pertanyaan.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      faq.jawaban.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "all" || faq.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+  const { addFaqMutation } = useAddFaqMutation({
+    successAction: () => {
+      refetch();
+      resetForm();
+    },
   });
 
-  const handleSubmit = (e) => {
+  const { editFaqMutation } = useEditFaqMutation({
+    successAction: () => {
+      refetch();
+      resetForm();
+    },
+  });
+
+  const { deleteFaqMutation } = useDeleteFaqMutation({
+    successAction: () => {
+      refetch();
+    },
+  });
+
+  // Filtering
+  const filteredFaqs = (faqs || []).filter((faq) => {
+    return (
+      (searchTerm === "" ||
+        faq.question?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        faq.answer?.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      (selectedCategory === "all" || faq.category === selectedCategory)
+    );
+  });
+
+  // Submit handler
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (editingFaq) {
-      setFaqs(
-        faqs.map((faq) =>
-          faq.id === editingFaq.id ? { ...faq, ...formData } : faq
-        )
-      );
+      editFaqMutation.mutate({
+        faqId: editingFaq.id,
+        payload: {
+          question: formData.question,
+          answer: formData.answer,
+          category: formData.category,
+        },
+      });
     } else {
-      const newFaq = {
-        id: Math.max(...faqs.map((f) => f.id)) + 1,
-        ...formData,
-      };
-      setFaqs([...faqs, newFaq]);
+      addFaqMutation.mutate({
+        payload: {
+          question: formData.question,
+          answer: formData.answer,
+          category: formData.category,
+        },
+      });
     }
-    resetForm();
   };
 
+  // Edit handler
   const handleEdit = (faq) => {
     setEditingFaq(faq);
     setFormData({
-      pertanyaan: faq.pertanyaan,
-      jawaban: faq.jawaban,
+      question: faq.question,
+      answer: faq.answer,
       category: faq.category,
     });
     setIsDialogOpen(true);
   };
 
+  // Delete handler
   const handleDelete = (id) => {
-    setFaqs(faqs.filter((faq) => faq.id !== id));
+    deleteFaqMutation.mutate({ faqId: id });
   };
 
+  // Reset form
   const resetForm = () => {
-    setFormData({ pertanyaan: "", jawaban: "", category: "" });
+    setFormData({ question: "", answer: "", category: "" });
     setEditingFaq(null);
     setIsDialogOpen(false);
   };
 
-  const getCategoryColor = (category) => {
+  // Badge color
+  const getCategoryColor = (categoryKey) => {
+    const label = categoriesObj[categoryKey];
     const colors = {
-      Akun: "bg-blue-100 text-blue-800",
-      Pembayaran: "bg-green-100 text-green-800",
-      Dukungan: "bg-purple-100 text-purple-800",
-      Teknis: "bg-orange-100 text-orange-800",
-      Umum: "bg-gray-100 text-gray-800",
+      Umum: "bg-blue-100 text-blue-800",
+      Informasi: "bg-green-100 text-green-800",
+      Event: "bg-purple-100 text-purple-800",
+      Bantuan: "bg-orange-100 text-orange-800",
     };
-    return colors[category] || "bg-gray-100 text-gray-800";
+    return colors[label] || "bg-gray-100 text-gray-800";
   };
 
   return (
@@ -185,9 +198,9 @@ export default function FAQManagement() {
                   <Label htmlFor="pertanyaan">Pertanyaan</Label>
                   <Input
                     id="pertanyaan"
-                    value={formData.pertanyaan}
+                    value={formData.question}
                     onChange={(e) =>
-                      setFormData({ ...formData, pertanyaan: e.target.value })
+                      setFormData({ ...formData, question: e.target.value })
                     }
                     placeholder="Masukkan pertanyaan..."
                     required
@@ -197,9 +210,9 @@ export default function FAQManagement() {
                   <Label htmlFor="jawaban">Jawaban</Label>
                   <Textarea
                     id="jawaban"
-                    value={formData.jawaban}
+                    value={formData.answer}
                     onChange={(e) =>
-                      setFormData({ ...formData, jawaban: e.target.value })
+                      setFormData({ ...formData, answer: e.target.value })
                     }
                     placeholder="Masukkan jawaban..."
                     rows={4}
@@ -211,17 +224,24 @@ export default function FAQManagement() {
                   <Select
                     value={formData.category}
                     onValueChange={(value) =>
-                      setFormData({ ...formData, category: value })
+                      setFormData({
+                        ...formData,
+                        category: value,
+                      })
                     }
                     required
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Pilih kategori" />
+                      <SelectValue placeholder="Pilih kategori">
+                        {formData.category
+                          ? categoriesObj[formData.category]
+                          : ""}
+                      </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem key={category} value={category}>
-                          {category}
+                      {Object.entries(categoriesObj).map(([key, label]) => (
+                        <SelectItem key={key} value={key}>
+                          {label}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -231,7 +251,12 @@ export default function FAQManagement() {
                   <Button type="button" variant="outline" onClick={resetForm}>
                     Batal
                   </Button>
-                  <Button type="submit">
+                  <Button
+                    type="submit"
+                    disabled={
+                      addFaqMutation.isPending || editFaqMutation.isPending
+                    }
+                  >
                     {editingFaq ? "Update" : "Simpan"}
                   </Button>
                 </DialogFooter>
@@ -263,7 +288,7 @@ export default function FAQManagement() {
               <div className="sm:w-48">
                 <Select
                   value={selectedCategory}
-                  onValueChange={setSelectedCategory}
+                  onValueChange={(value) => setSelectedCategory(value)}
                 >
                   <SelectTrigger>
                     <Filter className="w-4 h-4 mr-2" />
@@ -271,9 +296,9 @@ export default function FAQManagement() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Semua Kategori</SelectItem>
-                    {categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
+                    {Object.entries(categoriesObj).map(([key, label]) => (
+                      <SelectItem key={key} value={key}>
+                        {label}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -292,87 +317,97 @@ export default function FAQManagement() {
           </CardHeader>
           <CardContent>
             <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-12">ID</TableHead>
-                    <TableHead>Pertanyaan</TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      Jawaban
-                    </TableHead>
-                    <TableHead>Kategori</TableHead>
-                    <TableHead className="w-24">Aksi</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredFaqs.length === 0 ? (
+              {isLoading ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  Loading...
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
                     <TableRow>
-                      <TableCell
-                        colSpan={5}
-                        className="text-center py-8 text-muted-foreground"
-                      >
-                        Tidak ada FAQ yang ditemukan
-                      </TableCell>
+                      <TableHead className="w-12">ID</TableHead>
+                      <TableHead>Pertanyaan</TableHead>
+                      <TableHead className="hidden md:table-cell">
+                        Jawaban
+                      </TableHead>
+                      <TableHead>Kategori</TableHead>
+                      <TableHead className="w-24">Aksi</TableHead>
                     </TableRow>
-                  ) : (
-                    filteredFaqs.map((faq) => (
-                      <TableRow key={faq.id}>
-                        <TableCell className="font-medium">{faq.id}</TableCell>
-                        <TableCell className="max-w-xs">
-                          <div className="truncate" title={faq.pertanyaan}>
-                            {faq.pertanyaan}
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell max-w-md">
-                          <div className="truncate" title={faq.jawaban}>
-                            {faq.jawaban}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge className={getCategoryColor(faq.category)}>
-                            {faq.category}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleEdit(faq)}
-                            >
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button variant="outline" size="sm">
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>Hapus FAQ</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Apakah Anda yakin ingin menghapus FAQ ini?
-                                    Tindakan ini tidak dapat dibatalkan.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Batal</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => handleDelete(faq.id)}
-                                  >
-                                    Hapus
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </div>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredFaqs.length === 0 ? (
+                      <TableRow>
+                        <TableCell
+                          colSpan={5}
+                          className="text-center py-8 text-muted-foreground"
+                        >
+                          Tidak ada FAQ yang ditemukan
                         </TableCell>
                       </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
+                    ) : (
+                      filteredFaqs.map((faq) => (
+                        <TableRow key={faq.id}>
+                          <TableCell className="font-medium">
+                            {faq.id}
+                          </TableCell>
+                          <TableCell className="max-w-xs">
+                            <div className="truncate" title={faq.question}>
+                              {faq.question}
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell max-w-md">
+                            <div className="truncate" title={faq.answer}>
+                              {faq.answer}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge className={getCategoryColor(faq.category)}>
+                              {categoriesObj[faq.category] || faq.category}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleEdit(faq)}
+                              >
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button variant="outline" size="sm">
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>
+                                      Hapus FAQ
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Apakah Anda yakin ingin menghapus FAQ ini?
+                                      Tindakan ini tidak dapat dibatalkan.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Batal</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => handleDelete(faq.id)}
+                                    >
+                                      Hapus
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              )}
             </div>
           </CardContent>
         </Card>
