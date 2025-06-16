@@ -1,55 +1,87 @@
-// 📁 File: src/app/(backoffice)/dashboard/management/user/page.jsx
+"use client";
 
-"use client"
-
-import AddButton from "@/components/_shared/AddButton"
-import SearchBox from "@/components/_shared/SearchBox"
-import { useState, useEffect } from "react"
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { UserDialog } from "@/components/core/user-dialog"
-import { DeleteUserDialog } from "@/components/core/delete-user-dialog"
-
-const mockUsers = [
-  { id: "1", fullname: "John Doe", email: "john@example.com", role: "ADMIN" },
-  { id: "2", fullname: "Jane Smith", email: "jane@example.com", role: "ORGANIZER" },
-]
+import AddButton from "@/components/_shared/AddButton";
+import SearchBox from "@/components/_shared/SearchBox";
+import { useState, useEffect } from "react";
+import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { UserDialog } from "@/components/core/user-dialog";
+import { DeleteUserDialog } from "@/components/core/delete-user-dialog";
+import {
+  useGetAllUsers,
+  useAddUserMutation,
+  useEditUserMutation,
+  useDeleteUserMutation,
+} from "@/hooks/user.hooks";
 
 export default function UsersPage() {
-  const [users, setUsers] = useState(mockUsers)
-  const [filteredUsers, setFilteredUsers] = useState(mockUsers)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [isUserDialogOpen, setIsUserDialogOpen] = useState(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [selectedUser, setSelectedUser] = useState(null)
-  const [isEditing, setIsEditing] = useState(false)
+  const { users, isLoading, refetch } = useGetAllUsers();
+  const { addUserMutation } = useAddUserMutation({ successAction: refetch });
+  const { editUserMutation } = useEditUserMutation({ successAction: refetch });
+  const { deleteUserMutation } = useDeleteUserMutation({
+    successAction: () => {
+      setIsDeleteDialogOpen(false);
+      setSelectedUser(null);
+      refetch();
+    },
+  });
+
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    const filtered = users.filter((user) =>
-      user.fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.role.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    setFilteredUsers(filtered)
-  }, [users, searchTerm])
+    if (users && Array.isArray(users)) {
+      const filtered = users.filter((user) =>
+        user.fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.role.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredUsers(filtered);
+    }
+  }, [users, searchTerm]);
 
   const handleSaveUser = (userData) => {
-    if (isEditing) {
-      setUsers(users.map((u) => (u.id === selectedUser.id ? { ...u, ...userData } : u)))
+    if (isEditing && selectedUser?.id) {
+      editUserMutation.mutate({ userId: selectedUser.id, payload: userData });
     } else {
-      setUsers([...users, { id: Date.now().toString(), ...userData }])
+      addUserMutation.mutate({ payload: userData });
     }
-    setIsUserDialogOpen(false)
-  }
+    setSelectedUser(null);
+    setIsEditing(false);
+    setIsUserDialogOpen(false);
+  };
 
   const handleConfirmDelete = () => {
-    setUsers(users.filter((u) => u.id !== selectedUser.id))
-    setIsDeleteDialogOpen(false)
-  }
+    if (selectedUser?.id) {
+      deleteUserMutation.mutate({ userId: selectedUser.id });
+    }
+  };
 
   return (
     <div className="container mx-auto py-6 space-y-6">
@@ -58,20 +90,15 @@ export default function UsersPage() {
           <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
           <p className="text-muted-foreground">Manage users and their roles</p>
         </div>
-        <AddButton label="Add User">
-          {({ close }) => (
-            <UserDialog
-              open
-              onOpenChange={(open) => !open && close()}
-              isEditing={false}
-              user={null}
-              onSave={(data) => {
-                handleSaveUser(data)
-                close()
-              }}
-            />
-          )}
-        </AddButton>
+        <Button
+          onClick={() => {
+            setSelectedUser(null);
+            setIsEditing(false);
+            setIsUserDialogOpen(true);
+          }}
+        >
+          Add User
+        </Button>
       </div>
 
       <Card>
@@ -103,24 +130,35 @@ export default function UsersPage() {
                   <TableRow key={user.id}>
                     <TableCell>{user.fullname}</TableCell>
                     <TableCell>{user.email}</TableCell>
-                    <TableCell><Badge variant={user.role === "ADMIN" ? "default" : "secondary"}>{user.role}</Badge></TableCell>
+                    <TableCell>
+                      <Badge variant={user.role === "ADMIN" ? "default" : "secondary"}>
+                        {user.role}
+                      </Badge>
+                    </TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon"><MoreHorizontal /></Button>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal />
+                          </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => {
-                            setSelectedUser(user)
-                            setIsEditing(true)
-                            setIsUserDialogOpen(true)
-                          }}>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setSelectedUser(user);
+                              setIsEditing(true);
+                              setIsUserDialogOpen(true);
+                            }}
+                          >
                             <Pencil className="mr-2 h-4 w-4" /> Edit
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-destructive" onClick={() => {
-                            setSelectedUser(user)
-                            setIsDeleteDialogOpen(true)
-                          }}>
+                          <DropdownMenuItem
+                            className="text-destructive"
+                            onClick={() => {
+                              setSelectedUser(user);
+                              setIsDeleteDialogOpen(true);
+                            }}
+                          >
                             <Trash2 className="mr-2 h-4 w-4" /> Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -136,7 +174,13 @@ export default function UsersPage() {
 
       <UserDialog
         open={isUserDialogOpen}
-        onOpenChange={setIsUserDialogOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            setIsUserDialogOpen(false);
+            setSelectedUser(null);
+            setIsEditing(false);
+          }
+        }}
         user={selectedUser}
         isEditing={isEditing}
         onSave={handleSaveUser}
@@ -149,5 +193,5 @@ export default function UsersPage() {
         onConfirm={handleConfirmDelete}
       />
     </div>
-  )
+  );
 }
