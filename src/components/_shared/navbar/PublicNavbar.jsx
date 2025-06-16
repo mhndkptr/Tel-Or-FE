@@ -8,7 +8,7 @@ export default function PublicNavbar() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/telkom-university-logo.png"
+              src="/assets/logos/logo-telkom-university.jpg" 
               alt="Telkom University Logo"
               width={120}
               height={40}
@@ -19,20 +19,17 @@ export default function PublicNavbar() {
             <Link href="/" className="text-gray-800 hover:text-red-600 font-medium">
               Home
             </Link>
-            <Link href="/media" className="text-gray-800 hover:text-red-600 font-medium">
-              Media
+            <Link href="/ormawa" className="text-gray-800 hover:text-red-600 font-medium">
+              Ormawa
             </Link>
-            <Link href="/careers" className="text-gray-800 hover:text-red-600 font-medium">
-              Careers
+            <Link href="/event" className="text-gray-800 hover:text-red-600 font-medium">
+              Event
             </Link>
             <Link href="/faq" className="text-gray-800 hover:text-red-600 font-medium">
               FAQ
             </Link>
-            <Link href="/discord" className="text-gray-800 hover:text-red-600">
-              <Image src="/discord-icon.png" alt="Discord" width={24} height={24} className="h-6 w-auto" />
-            </Link>
-            <Link href="/twitter" className="text-gray-800 hover:text-red-600">
-              <Image src="/twitter-icon.png" alt="Twitter" width={24} height={24} className="h-6 w-auto" />
+             <Link href="/faq" className="text-gray-800 hover:text-red-600 font-medium">
+              Contact us
             </Link>
           </nav>
           <Button variant="ghost" size="icon" className="md:hidden">
