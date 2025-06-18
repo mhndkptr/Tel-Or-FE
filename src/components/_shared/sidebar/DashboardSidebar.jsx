@@ -101,6 +101,11 @@ export function DashboardSidebar() {
             isActive: pathname.startsWith("/dashboard/management/event"),
           },
           {
+            name: "Ormawa",
+            href: "/dashboard/management/ormawa",
+            isActive: pathname.startsWith("/dashboard/management/ormawa"),
+          },
+          {
             name: "User",
             href: "/dashboard/management/user",
             isActive: pathname.startsWith("/dashboard/management/user"),
