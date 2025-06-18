@@ -46,7 +46,9 @@ export default function EventCard({ event }) {
       >
         <div className="absolute inset-0 bg-opacity-40 flex flex-col justify-center text-center text-white p-4">
           {/* Event Name */}
-          <h3 className="text-lg font-bold mb-2">{event?.eventName}</h3>
+          <h3 className="text-lg text-black font-bold mb-2">
+            {event?.eventName}
+          </h3>
 
           {/* Event Type */}
           <div className="mt-2">
@@ -74,6 +76,16 @@ export default function EventCard({ event }) {
             {event?.description}
           </p>
         </div>
+
+        {/* Event Region */}
+        {event.eventRegion &&
+          (["SEMINAR", "LOMBA", "BEASISWA"].includes(event.eventType)) && (
+            <div className="mb-4">
+              <span className="bg-red-500 bg-opacity-80 px-3 py-1 rounded-full text-xs font-medium text-white">
+                {event.eventRegion}
+              </span>
+            </div>
+          )}
 
         {/* Event Dates */}
         <div className="space-y-2 text-sm text-gray-600">
