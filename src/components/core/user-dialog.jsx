@@ -27,19 +27,25 @@ export function UserDialog({ open, onOpenChange, user, isEditing, onSave }) {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    if (user) {
-      setFullname(user.fullname || "");
-      setEmail(user.email || "");
-      setRole(user.role || "ADMIN");
-      setPassword("");
-    } else {
-      setFullname("");
-      setEmail("");
-      setRole("ADMIN");
-      setPassword("");
-    }
-    setErrorMessage("");
-  }, [user]);
+  if (open && !user) {
+    // Tambah user, reset semua field
+    setFullname("");
+    setEmail("");
+    setRole("ADMIN");
+    setPassword("");
+  }
+
+  if (open && user) {
+    // Edit user
+    setFullname(user.fullname || "");
+    setEmail(user.email || "");
+    setRole(user.role || "ADMIN");
+    setPassword("");
+  }
+
+  setErrorMessage("");
+}, [user, open]);
+
 
   const handleSubmit = () => {
     if (!fullname || !email || !role || (!isEditing && !password)) {
