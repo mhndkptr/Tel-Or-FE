@@ -21,6 +21,7 @@ jobs:
         run: |
           touch .env
           echo NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }} >> .env
+          echo NEXT_PUBLIC_API_VERSION=${{ secrets.NEXT_PUBLIC_API_VERSION }} >> .env
           echo APP_PORT=${{ secrets.APP_PORT }} >> .env
           echo NODE_ENV=${{ vars.NODE_ENV }} >> .env
 
