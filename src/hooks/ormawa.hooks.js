@@ -89,7 +89,13 @@ export function useGetOrmawaById(ormawaId) {
   });
 
   const ormawaData = useMemo(() => {
-    return data?.status === 200 ? data.data : {};
+    if (data?.status === 200 && data.data) {
+      return {
+        ...data.data,
+        name: data.data.ormawaName,
+      };
+    }
+    return null;
   }, [data]);
 
   return { ormawaData, isLoading, isPending, isError, refetch };
