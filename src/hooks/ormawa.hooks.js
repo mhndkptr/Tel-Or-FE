@@ -97,7 +97,7 @@ export function useGetOrmawaById(ormawaId) {
 
 // === ADD ===
 export function useAddOrmawaMutation({ successAction }) {
-  const addOrmawaMutation = useMutation({
+  return useMutation({
     mutationFn: (data) =>
       fetch({
         method: "post",
@@ -124,7 +124,6 @@ export function useAddOrmawaMutation({ successAction }) {
       );
     },
   });
-  return { addOrmawaMutation };
 }
 
 // === EDIT ===
