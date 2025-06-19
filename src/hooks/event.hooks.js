@@ -1,6 +1,6 @@
 import ToastContent from "@/components/_shared/toast/ToastContent";
 import { fetch } from "@/utils/baseFetch";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { toast } from "react-toastify";
 
@@ -117,7 +117,7 @@ export function useAddEventMutation({ successAction }) {
         },
       }),
     onSuccess: (data) => {
-      if (data?.statusCode === 200 || data?.statusCode === 201) {
+      if (data?.status === 200 || data?.status === 201) {
         successAction();
         toast.success(<ToastContent title={"Event berhasil ditambahkan!"} />, {
           position: "top-right",
@@ -178,15 +178,15 @@ export function useEditEventMutation({ successAction }) {
   const editEventMutation = useMutation({
     mutationFn: (data) =>
       fetch({
-        method: "patch",
-        url: `/events`,
+        method: "put",
+        url: `/events/${data.payload.get("eventId")}`, // <-- gunakan id di url
         payload: data.payload,
         options: {
           excludeShowErrorStatusCode: [404],
         },
       }),
     onSuccess: (data) => {
-      if (data?.statusCode === 200 || data?.statusCode === 201) {
+      if (data?.status === 200 || data?.status === 201) {
         successAction();
         toast.success(<ToastContent title={"Event berhasil diperbarui!"} />, {
           position: "top-right",
@@ -254,7 +254,7 @@ export function useDeleteEventMutation({ successAction }) {
         },
       }),
     onSuccess: (data) => {
-      if (data?.statusCode === 200) {
+      if (data?.status === 200) {
         successAction();
         toast.success(<ToastContent title={"Event berhasil dihapus!"} />, {
           position: "top-right",

@@ -32,7 +32,35 @@ export default function EventCard({ event }) {
 
   // Check if event has prize (Lomba or Beasiswa)
   const hasPrize = (category) => {
-    return category === "Lomba" || category === "Beasiswa";
+    return category === "LOMBA" || category === "BEASISWA";
+  };
+
+  const getEventTypeColor = (eventTypeKey) => {
+    const labelMap = {
+      SEMINAR: "Seminar",
+      LOMBA: "Lomba",
+      BEASISWA: "Beasiswa",
+      COMPANY_VISIT: "Company Visit",
+      OPEN_RECRUITMENT: "Open Recruitment",
+    };
+    const label = labelMap[eventTypeKey] || eventTypeKey;
+    const colors = {
+      Seminar: "bg-blue-100 text-blue-800",
+      Lomba: "bg-red-100 text-red-800",
+      Beasiswa: "bg-green-100 text-green-800",
+      "Company Visit": "bg-purple-100 text-purple-800",
+      "Open Recruitment": "bg-orange-100 text-orange-800",
+    };
+    return colors[label] || "bg-gray-100 text-gray-800";
+  };
+
+  const getEventRegionColor = (region) => {
+    const colors = {
+      Regional: "bg-pink-100 text-pink-800",
+      National: "bg-indigo-100 text-indigo-800",
+      International: "bg-teal-100 text-teal-800",
+    };
+    return colors[region] || "bg-gray-100 text-gray-800";
   };
 
   return (
@@ -41,35 +69,16 @@ export default function EventCard({ event }) {
       <CardContent
         className="relative h-48 bg-cover bg-center"
         style={{
-          backgroundImage: `url(${process.env.NEXT_PUBLIC_API_BASE_URL}${event?.image[0]})`,
+          backgroundImage: `url("${process.env.NEXT_PUBLIC_API_BASE_URL}${event?.image[0]}")`,
         }}
-      >
-        <div className="absolute inset-0 bg-opacity-40 flex flex-col justify-center text-center text-white p-4">
-          {/* Event Name */}
-          <h3 className="text-lg text-black font-bold mb-2">
-            {event?.eventName}
-          </h3>
-
-          {/* Event Type */}
-          <div className="mt-2">
-            <span className="bg-pink-500 bg-opacity-80 px-3 py-1 rounded-full text-xs font-medium">
-              {event.eventType}
-            </span>
-          </div>
-
-          {/* Prize Badge for Lomba and Beasiswa */}
-          {hasPrize(event.eventType) && event?.prize && (
-            <div className="mt-2">
-              <span className="bg-yellow-500 bg-opacity-90 px-3 py-1 rounded-full text-xs font-bold flex items-center justify-center gap-1">
-                <Trophy className="h-3 w-3" />
-                {formatCurrency(0)}
-              </span>
-            </div>
-          )}
-        </div>
-      </CardContent>
+      ></CardContent>
 
       <CardContent className="flex-1 flex flex-col justify-between p-6">
+        {/* Event Name */}
+        <h3 className="text-lg text-black font-bold mb-2">
+          {event?.eventName}
+        </h3>
+
         {/* Description */}
         <div className="mb-4">
           <p className="text-gray-600 text-sm leading-relaxed line-clamp-4">
@@ -77,15 +86,38 @@ export default function EventCard({ event }) {
           </p>
         </div>
 
-        {/* Event Region */}
-        {event.eventRegion &&
-          (["SEMINAR", "LOMBA", "BEASISWA"].includes(event.eventType)) && (
-            <div className="mb-4">
-              <span className="bg-red-500 bg-opacity-80 px-3 py-1 rounded-full text-xs font-medium text-white">
+        {/* Tags: Event Type & Event Region */}
+        <div className="flex items-center gap-2 mb-4">
+          {/* Event Type */}
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-medium ${getEventTypeColor(
+              event.eventType
+            )}`}
+          >
+            {(() => {
+              const labelMap = {
+                SEMINAR: "Seminar",
+                LOMBA: "Lomba",
+                BEASISWA: "Beasiswa",
+                COMPANY_VISIT: "Company Visit",
+                OPEN_RECRUITMENT: "Open Recruitment",
+              };
+              return labelMap[event.eventType] || event.eventType;
+            })()}
+          </span>
+
+          {/* Event Region */}
+          {event.eventRegion &&
+            ["SEMINAR", "LOMBA", "BEASISWA"].includes(event.eventType) && (
+              <span
+                className={`px-3 py-1 rounded-full text-xs font-medium ${getEventRegionColor(
+                  event.eventRegion
+                )}`}
+              >
                 {event.eventRegion}
               </span>
-            </div>
-          )}
+            )}
+        </div>
 
         {/* Event Dates */}
         <div className="space-y-2 text-sm text-gray-600">
@@ -104,6 +136,16 @@ export default function EventCard({ event }) {
             </span>
           </div>
         </div>
+
+        {/* Prize Badge for Lomba and Beasiswa */}
+        {hasPrize(event.eventType) && event?.prize && (
+          <div className="mt-2">
+            <span className="bg-yellow-500 bg-opacity-90 px-3 py-1 rounded-full text-xs font-bold flex items-center justify-center gap-1">
+              <Trophy className="h-3 w-3" />
+              {formatCurrency(parseFloat(event?.prize) || 0)}
+            </span>
+          </div>
+        )}
       </CardContent>
 
       <CardFooter className="p-6 pt-0">

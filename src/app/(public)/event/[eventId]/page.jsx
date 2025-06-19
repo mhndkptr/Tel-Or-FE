@@ -40,6 +40,28 @@ export default function EventDetailPage({}) {
     return category === "Lomba" || category === "Beasiswa";
   };
 
+  const getEventTypeLabel = (eventTypeKey) => {
+    const labelMap = {
+      SEMINAR: "Seminar",
+      LOMBA: "Lomba",
+      BEASISWA: "Beasiswa",
+      COMPANY_VISIT: "Company Visit",
+      OPEN_RECRUITMENT: "Open Recruitment",
+    };
+    return labelMap[eventTypeKey] || eventTypeKey;
+  };
+  const getEventTypeColor = (eventTypeKey) => {
+    const label = getEventTypeLabel(eventTypeKey);
+    const colors = {
+      Seminar: "bg-blue-100 text-blue-800",
+      Lomba: "bg-red-100 text-red-800",
+      Beasiswa: "bg-green-100 text-green-800",
+      "Company Visit": "bg-purple-100 text-purple-800",
+      "Open Recruitment": "bg-orange-100 text-orange-800",
+    };
+    return colors[label] || "bg-gray-100 text-gray-800";
+  };
+
   if (!eventData) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -81,12 +103,13 @@ export default function EventDetailPage({}) {
             {eventData?.eventName}
           </h1>
           <div className="flex items-center justify-center gap-4 flex-wrap">
-            <Badge
-              variant="secondary"
-              className="bg-pink-500 text-white px-4 py-2 text-sm"
+            <span
+              className={`px-4 py-2 rounded-full text-sm font-medium ${getEventTypeColor(
+                eventData?.eventType
+              )}`}
             >
-              {eventData?.eventType}
-            </Badge>
+              {getEventTypeLabel(eventData?.eventType)}
+            </span>
             {hasPrize(eventData?.eventType) && eventData?.prize && (
               <Badge
                 variant="secondary"
@@ -104,9 +127,9 @@ export default function EventDetailPage({}) {
           <div
             className="w-full h-96 bg-cover bg-center rounded-lg shadow-lg"
             style={{
-              backgroundImage: `url(${process.env.NEXT_PUBLIC_API_BASE_URL}${
+              backgroundImage: `url("${process.env.NEXT_PUBLIC_API_BASE_URL}${
                 eventData?.image && eventData?.image[0]
-              })`,
+              }")`,
             }}
           >
             <div className="w-full h-full bg-opacity-40 rounded-lg flex items-center justify-center">
@@ -128,7 +151,7 @@ export default function EventDetailPage({}) {
             <Card>
               <CardContent className="p-8">
                 <div
-                  className="prose prose-gray max-w-none prose-headings:text-gray-800 prose-h2:text-2xl prose-h3:text-xl prose-p:text-gray-600 prose-li:text-gray-600 prose-strong:text-gray-800 prose-a:text-red-600 prose-a:no-underline hover:prose-a:underline"
+                  className="prose prose-gray max-w-none prose-headings:text-gray-800 prose-h2:text-2xl prose-h3:text-xl prose-p:text-gray-600 prose-p:mb-4 prose-li:text-gray-600 prose-strong:text-gray-800 prose-a:text-red-600 prose-a:no-underline hover:prose-a:underline"
                   dangerouslySetInnerHTML={{ __html: eventData?.content }}
                 />
               </CardContent>
