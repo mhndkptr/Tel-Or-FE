@@ -8,8 +8,9 @@ import {
   useEditOrmawaMutation,
   useDeleteOrmawaMutation,
 } from "@/hooks/ormawa.hooks";
+import { useAuth } from "@/contexts/authContext"; // Tambahkan untuk akses user
 
-// UI Components (ganti dengan komponen UI project-mu jika ada)
+// UI Components (sama seperti sebelumnya)
 function Input(props) {
   return <input className="border rounded px-2 py-1 w-full" {...props} />;
 }
@@ -69,8 +70,6 @@ function CardDescription({ children }) {
 function CardContent({ children }) {
   return <div className="p-4">{children}</div>;
 }
-
-// Dialog sederhana
 function Dialog({ open, onOpenChange, children }) {
   if (!open) return null;
   return (
@@ -108,8 +107,6 @@ function DialogDescription({ children }) {
 function DialogFooter({ children }) {
   return <div className="flex justify-end gap-2 mt-4">{children}</div>;
 }
-
-// AlertDialog sederhana
 function AlertDialog({ open, onOpenChange, children }) {
   if (!open) return null;
   return (
@@ -151,7 +148,6 @@ function AlertDialogAction({ children, onClick }) {
   return <Button onClick={onClick}>{children}</Button>;
 }
 
-// ENUMS
 const LAB_TYPE_ENUM = ["PRAKTIKUM", "RESEARCH"];
 const CATEGORY_COLORS = {
   LAB: "bg-purple-100 text-purple-800",
@@ -165,6 +161,7 @@ const LAB_TYPE_COLORS = {
 };
 
 export default function OrmawaManagement() {
+  const { user } = useAuth(); // Ambil data user termasuk role dan id
   const { ormawaData, isLoading, refetch } = useGetAllOrmawa();
   const addOrmawaMutation = useAddOrmawaMutation({ successAction: refetch });
   const editOrmawaMutation = useEditOrmawaMutation({ successAction: refetch });
@@ -198,6 +195,7 @@ export default function OrmawaManagement() {
 
   const categories = ["LAB", "ORGANIZATION", "UKM", "COMMUNITY"];
 
+  // Filter ormawa berdasarkan role
   const filteredOrmawas = (ormawaData || []).filter((o) => {
     const matchSearch =
       o.ormawaName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -205,8 +203,13 @@ export default function OrmawaManagement() {
       o.content?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchCategory =
       selectedCategory === "all" || o.category === selectedCategory;
-    return matchSearch && matchCategory;
+    const matchCreator =
+      user?.role === "ADMIN" || (user?.role === "ORGANIZER" && o.creatorId === user.id);
+    return matchSearch && matchCategory && matchCreator;
   });
+
+  // Cek apakah ORGANIZER sudah memiliki ormawa
+  const organizerOrmawaCount = ormawaData?.filter((o) => o.creatorId === user?.id).length || 0;
 
   const resetForm = () => {
     setFormData({
@@ -257,8 +260,7 @@ export default function OrmawaManagement() {
       payload.append("background", fileBg);
     }
 
-    // if (payload.category !== "LAB") payload.labType = "";
-    // if (payload.category !== "UKM") payload.ukmCategory = "";
+    payload.append("creatorId", user?.id); // Tambahkan creatorId ke payload
     console.log("Submitting payload:", payload);
     if (editingOrmawa) {
       editOrmawaMutation.mutate({ id: editingOrmawa.id, payload });
@@ -270,6 +272,10 @@ export default function OrmawaManagement() {
   };
 
   const handleEdit = (o) => {
+    if (user?.role === "ORGANIZER" && o.creatorId !== user.id) {
+      console.warn("⚠️ ORGANIZER hanya bisa edit ormawa milik sendiri");
+      return;
+    }
     setEditingOrmawa(o);
     setFormData({
       ormawaName: o.ormawaName || "",
@@ -290,6 +296,11 @@ export default function OrmawaManagement() {
   };
 
   const handleDelete = (id) => {
+    const ormawaToDelete = ormawaData.find((o) => o.id === id);
+    if (user?.role === "ORGANIZER" && ormawaToDelete?.creatorId !== user.id) {
+      console.warn("⚠️ ORGANIZER hanya bisa hapus ormawa milik sendiri");
+      return;
+    }
     setPendingDeleteId(id);
     setDeleteDialogOpen(true);
   };
@@ -300,11 +311,9 @@ export default function OrmawaManagement() {
     setPendingDeleteId(null);
   };
 
-  // Untuk sub kategori
   const showLabType = formData.category === "LAB";
   const showUkmCategory = formData.category === "UKM";
 
-  // Icon upload handler
   const handleIconChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -315,7 +324,6 @@ export default function OrmawaManagement() {
     }
   };
 
-  // Background upload handler
   const handleBgChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -336,17 +344,19 @@ export default function OrmawaManagement() {
             <h1 className="text-3xl font-bold">Ormawa Management</h1>
             <p className="text-gray-500">Kelola data Ormawa</p>
           </div>
-          <DialogTrigger
-            onClick={() => {
-              resetForm();
-              setIsDialogOpen(true);
-            }}
-          >
-            <Button className="flex flex-col items-center bg-blue-600 hover:bg-blue-700">
-              <Plus className="w-6 h-6 mb-1" />
-              <span className="text-sm font-semibold">Tambah Ormawa</span>
-            </Button>
-          </DialogTrigger>
+          {user?.role !== "ADMIN" && user?.role === "ORGANIZER" && organizerOrmawaCount === 0 && (
+            <DialogTrigger
+              onClick={() => {
+                resetForm();
+                setIsDialogOpen(true);
+              }}
+            >
+              <Button className="flex flex-col items-center bg-blue-600 hover:bg-blue-700">
+                <Plus className="w-6 h-6 mb-1" />
+                <span className="text-sm font-semibold">Tambah Ormawa</span>
+              </Button>
+            </DialogTrigger>
+          )}
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent>
               <DialogHeader>
