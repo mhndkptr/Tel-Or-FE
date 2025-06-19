@@ -230,10 +230,10 @@ export default function OrmawaManagement() {
 
   return (
     <>
-      <DashboardHeader title="Management Ormawa" />
+      <DashboardHeader title="Manajemen Ormawa" />
       <main className="md:p-5 p-3 bg-[#FCFCFC] min-h-screen md:space-y-5 space-y-3">
         {/* Filter & Search Section */}
-        <Card className="w-full gap-2">
+        <Card className="w-full gap-3">
           <CardHeader>
             <div className="flex justify-between items-center">
               <div>
