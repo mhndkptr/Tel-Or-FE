@@ -154,7 +154,7 @@ export function DashboardSidebar() {
 
   return (
     <Sidebar collapsible="icon" className={"!bg-white"}>
-      <SidebarHeader className="pt-6 pb-3">
+      <SidebarHeader className="pt-6 pb-3 bg-white">
         <div
           className={`flex items-center ${
             open ? "gap-2 px-3 justify-between" : "justify-center"
@@ -193,7 +193,7 @@ export function DashboardSidebar() {
           />
         </div>
       </SidebarHeader>
-      <SidebarContent className="px-3 py-2 w-full">
+      <SidebarContent className="px-3 py-2 w-full bg-white">
         <SidebarMenu>
           {sidebarMenus.map((menu, index) => (
             <React.Fragment key={menu.name}>
