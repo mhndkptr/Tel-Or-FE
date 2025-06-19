@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function PublicNavbar() {
   return (
     <header className="border-b">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div className="container max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/assets/logos/logo-telkom-university.jpg"
