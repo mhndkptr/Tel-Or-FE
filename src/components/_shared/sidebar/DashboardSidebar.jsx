@@ -204,7 +204,7 @@ export function DashboardSidebar() {
                     isActive={menu.isActive}
                     tooltip={menu.name}
                     onClick={() => router.push(menu.href)}
-                    className={`mx-auto cursor-pointer transition ${
+                    className={`mx-auto !py-5 cursor-pointer transition ${
                       menu.isActive ? "bg-[#F5F5F5] border border-[#D6D6D6]" : "bg-[#FCFCFC] hover:bg-[#F5F5F5]"
                     }`}
                   >
@@ -225,7 +225,7 @@ export function DashboardSidebar() {
                   <Collapsible open={menu.isOpen} onOpenChange={() => toggleSection(menu.section)} className="w-full">
                     <CollapsibleTrigger asChild>
                       <SidebarMenuButton
-                        className={`w-full cursor-pointer mx-auto transition ${
+                        className={`w-full cursor-pointer mx-auto transition !py-5 ${
                           menu.isActive ? "bg-[#F5F5F5] border border-[#D6D6D6]" : "bg-[#FCFCFC] hover:bg-[#F5F5F5]"
                         }  ${open ? "justify-between" : "justify-center"}`}
                         tooltip={menu.name}
@@ -266,7 +266,7 @@ export function DashboardSidebar() {
                               isActive={pathname === item.href}
                               tooltip={item.name}
                               onClick={() => router.push(item.href)}
-                              className={`mx-auto cursor-pointer py-1.5 transition ${
+                              className={`mx-auto cursor-pointer py-3 transition ${
                                 item.isActive ? "bg-[#F5F5F5] border border-[#D6D6D6]" : "hover:bg-[#F5F5F5]"
                               }`}
                             >
@@ -289,12 +289,12 @@ export function DashboardSidebar() {
           ))}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="p-3">
+      <SidebarFooter className="p-3 bg-white">
         <Button
           type="button"
           onClick={() => logout()}
           variant="ghostDestructive"
-          className={`w-full ${open ? "justify-center" : "justify-center"}`}
+          className={`w-full ${open ? "justify-center" : "justify-center"} py-3 cursor-pointer`}
           size="md"
         >
           <LogOut className={`${open ? "mr-2" : ""} size-5`} />
