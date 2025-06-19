@@ -2,7 +2,7 @@
 
 import AddButton from "@/components/_shared/AddButton";
 import SearchBox from "@/components/_shared/SearchBox";
-import Pagination from "@/components/ui/pagination";
+import Pagination from "@/components/ui/Pagination";
 import { useState, useEffect } from "react";
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
