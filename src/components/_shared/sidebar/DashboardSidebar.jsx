@@ -76,13 +76,6 @@ export function DashboardSidebar() {
         isActive: pathname === "/dashboard",
       },
       {
-        type: "single",
-        name: "Master Pengguna",
-        href: "/dashboard/master-user",
-        icon: ShieldUser,
-        isActive: pathname === "/dashboard/master-user",
-      },
-      {
         type: "collapsible",
         name: "Management",
         icon: UserRoundCog,
@@ -91,14 +84,9 @@ export function DashboardSidebar() {
         isActive: pathname.startsWith("/dashboard/management"),
         items: [
           {
-            name: "Faq",
-            href: "/dashboard/management/faq",
-            isActive: pathname.startsWith("/dashboard/management/faq"),
-          },
-          {
-            name: "Event",
-            href: "/dashboard/management/event",
-            isActive: pathname.startsWith("/dashboard/management/event"),
+            name: "User",
+            href: "/dashboard/management/user",
+            isActive: pathname.startsWith("/dashboard/management/user"),
           },
           {
             name: "Ormawa",
@@ -106,9 +94,14 @@ export function DashboardSidebar() {
             isActive: pathname.startsWith("/dashboard/management/ormawa"),
           },
           {
-            name: "User",
-            href: "/dashboard/management/user",
-            isActive: pathname.startsWith("/dashboard/management/user"),
+            name: "Event",
+            href: "/dashboard/management/event",
+            isActive: pathname.startsWith("/dashboard/management/event"),
+          },
+          {
+            name: "Faq",
+            href: "/dashboard/management/faq",
+            isActive: pathname.startsWith("/dashboard/management/faq"),
           },
         ],
       },
@@ -138,6 +131,11 @@ export function DashboardSidebar() {
         isOpen: openSections.management,
         isActive: pathname.startsWith("/dashboard/management"),
         items: [
+          {
+            name: "Ormawa",
+            href: "/dashboard/management/ormawa",
+            isActive: pathname.startsWith("/dashboard/management/ormawa"),
+          },
           {
             name: "Event",
             href: "/dashboard/management/event",
