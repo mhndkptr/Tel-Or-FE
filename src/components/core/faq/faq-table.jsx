@@ -45,11 +45,11 @@ export default function FaqTable({ faqs, isLoading, getCategoryColor, categories
       <TableBody>
         {faqs.map((faq) => (
           <TableRow key={faq.id}>
-            <TableCell className="font-medium">{faq.id}</TableCell>
+            <TableCell className="font-medium max-w-40 truncate overflow-hidden">{faq.id}</TableCell>
             <TableCell className="max-w-xs">
               <div className="truncate" title={faq.question}>{faq.question}</div>
             </TableCell>
-            <TableCell className="hidden md:table-cell max-w-md">
+            <TableCell className="hidden md:table-cell max-w-sm">
               <div className="truncate" title={faq.answer}>{faq.answer}</div>
             </TableCell>
             <TableCell>
