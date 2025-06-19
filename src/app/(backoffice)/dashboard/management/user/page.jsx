@@ -110,7 +110,7 @@ export default function UsersPage() {
           <div className="mb-4">
             <SearchBox
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(value) => setSearchTerm(value)} 
               placeholder="Search by name, email or role..."
             />
           </div>
