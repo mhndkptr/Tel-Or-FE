@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { toast } from "react-toastify";
+import ToastContent from "@/components/_shared/toast/ToastContent";
 import {
   Select,
   SelectContent,
@@ -29,6 +31,7 @@ import { Plus, Search, Filter } from "lucide-react";
 
 import EventForm from "@/components/core/event/event-form";
 import EventTable from "@/components/core/event/event-table";
+import { useGetAllOrmawa } from "@/hooks/ormawa.hooks";
 
 import {
   useGetAllEvent,
@@ -36,14 +39,17 @@ import {
   useEditEventMutation,
   useDeleteEventMutation,
 } from "@/hooks/event.hooks";
+import { useAuth } from "@/contexts/authContext";
 
 export default function EventManagement() {
+  const { user } = useAuth();
+
   const eventTypesObj = {
     SEMINAR: "Seminar",
     LOMBA: "Lomba",
     BEASISWA: "Beasiswa",
-    COMPANY_VISIT: "Company Visit",         // <-- pakai underscore
-    OPEN_RECRUITMENT: "Open Recruitment",   // <-- pakai underscore
+    COMPANY_VISIT: "Company Visit", // <-- pakai underscore
+    OPEN_RECRUITMENT: "Open Recruitment", // <-- pakai underscore
   };
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,28 +84,37 @@ export default function EventManagement() {
   };
 
   const handleSubmit = (data) => {
-  const payload = new FormData();
-  payload.append("eventName", data.eventName);
-  // Hanya tambahkan eventType jika tambah event
-  if (!editingEvent) {
-    payload.append("eventType", data.eventType.toUpperCase());
-  }
-  payload.append("eventRegion", data.eventRegion || "");
-  payload.append("description", data.description || "");
-  payload.append("startEvent", toIsoUtc(data.startEvent));
-  payload.append("endEvent", toIsoUtc(data.endEvent) || "");
-  payload.append("prize", data.prize || "");
-  payload.append("content", data.content || "");
-  if (data.photoFile) {
-    payload.append("image", data.photoFile);
-  }
-  if (editingEvent) {
-    payload.append("eventId", editingEvent.eventId);
-    editEventMutation.mutate({ payload });
-  } else {
-    addEventMutation.mutate({ payload });
-  }
-};
+    if (
+      !data.ormawaId ||
+      data.ormawaId === "undefined" ||
+      data.ormawaId === ""
+    ) {
+      alert("Ormawa ID tidak valid. Pilih Ormawa dengan benar.");
+      return;
+    }
+    const payload = new FormData();
+    payload.append("eventName", data.eventName);
+    if (!editingEvent) {
+      payload.append("eventType", data.eventType.toUpperCase());
+    }
+    payload.append("eventRegion", data.eventRegion || "");
+    payload.append("description", data.description || "");
+    payload.append("startEvent", toIsoUtc(data.startEvent));
+    payload.append("endEvent", toIsoUtc(data.endEvent) || "");
+    payload.append("prize", data.prize || "");
+    payload.append("content", data.content || "");
+    if (data.photoFile) {
+      payload.append("image", data.photoFile);
+    }
+    payload.append("ormawaId", String(data.ormawaId));
+    console.log("👉 Payload entries:", [...payload.entries()]);
+    if (editingEvent) {
+      payload.append("eventId", editingEvent.eventId);
+      editEventMutation.mutate({ payload });
+    } else {
+      addEventMutation.mutate({ payload });
+    }
+  };
 
   const handleEdit = (event) => {
     setEditingEvent(event);
@@ -107,7 +122,39 @@ export default function EventManagement() {
   };
 
   const handleDelete = (id) => {
-    deleteEventMutation.mutate({ eventId: id });
+    toast(
+      ({ closeToast }) => (
+        <div>
+          <div className="font-bold mb-2">Konfirmasi Hapus</div>
+          <div className="mb-3">Yakin ingin menghapus event ini?</div>
+          <div className="flex gap-2">
+            <button
+              className="px-3 py-1 bg-red-600 text-white rounded"
+              onClick={() => {
+                deleteEventMutation.mutate({ eventId: id });
+                closeToast();
+              }}
+            >
+              Ya, hapus
+            </button>
+            <button
+              className="px-3 py-1 bg-gray-200 rounded"
+              onClick={closeToast}
+            >
+              Batal
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        position: "top-right",
+        autoClose: false,
+        closeOnClick: false,
+        draggable: false,
+        closeButton: false,
+        hideProgressBar: true,
+      }
+    );
   };
 
   const resetForm = () => {
@@ -137,8 +184,32 @@ export default function EventManagement() {
       event.eventName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       event.description?.toLowerCase().includes(searchTerm.toLowerCase());
 
-    return eventTypeMatch && searchMatch;
+    const ormawaMatch =
+      !user?.role === "ORGANIZER" ||
+      (user?.role === "ORGANIZER" &&
+        user.ormawaId &&
+        event.ormawaId === user.ormawaId);
+
+    return eventTypeMatch && searchMatch && ormawaMatch;
   });
+
+  const { ormawaData, isLoading: isLoadingOrmawa } = useGetAllOrmawa();
+
+  if (
+    user?.role === "ORGANIZER" &&
+    (!user.ormawaId || user.ormawaId === "undefined")
+  ) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="bg-red-50 border border-red-300 rounded-lg shadow-md p-6">
+          <p className="text-center text-red-700 font-semibold text-lg bg-white px-4 py-2 rounded-md">
+            Anda belum memiliki ormawa. <br />
+            Silakan buat ormawa terlebih dahulu untuk mengelola event.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -152,7 +223,13 @@ export default function EventManagement() {
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button onClick={() => setEditingEvent(null)}>
+              <Button
+                onClick={() => setEditingEvent(null)}
+                disabled={
+                  user?.role === "ORGANIZER" &&
+                  (!user.ormawaId || user.ormawaId === "undefined")
+                }
+              >
                 <Plus className="w-4 h-4 mr-2" />
                 Tambah Event
               </Button>
@@ -177,6 +254,9 @@ export default function EventManagement() {
                   addEventMutation.isPending || editEventMutation.isPending
                 }
                 editingEvent={editingEvent}
+                user={user}
+                ormawaList={ormawaData}
+                isLoadingOrmawa={isLoadingOrmawa}
               />
             </DialogContent>
           </Dialog>

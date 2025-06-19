@@ -10,18 +10,20 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "@/components/ui/select";
 import { DialogFooter } from "@/components/ui/dialog";
 
-// ...existing code...
 export default function EventForm({
   formData,
   eventTypesObj,
   onSubmit,
   onCancel,
   isPending,
-  editingEvent
+  editingEvent,
+  user,
+  ormawaList = [],
+  isLoadingOrmawa = false,
 }) {
   const [localFormData, setLocalFormData] = useState({
     eventName: "",
@@ -32,7 +34,8 @@ export default function EventForm({
     endEvent: "",
     prize: "",
     content: "",
-    photoFile: null
+    photoFile: null,
+    ormawaId: "",
   });
 
   useEffect(() => {
@@ -42,11 +45,14 @@ export default function EventForm({
         eventType: formData.eventType || "",
         eventRegion: formData.eventRegion || "",
         description: formData.description || "",
-        startEvent: formData.startEvent ? formData.startEvent.split("T")[0] : "",
+        startEvent: formData.startEvent
+          ? formData.startEvent.split("T")[0]
+          : "",
         endEvent: formData.endEvent ? formData.endEvent.split("T")[0] : "",
         prize: formData.prize || "",
         content: formData.content || "",
-        photoFile: null
+        ormawaId: formData.ormawaId ? String(formData.ormawaId) : "",
+        photoFile: null,
       });
     } else {
       setLocalFormData({
@@ -58,10 +64,25 @@ export default function EventForm({
         endEvent: "",
         prize: "",
         content: "",
-        photoFile: null
+        ormawaId: "",
+        photoFile: null,
       });
     }
   }, [formData]);
+
+  useEffect(() => {
+    if (user?.role === "ORGANIZER" && editingEvent) {
+      if (editingEvent.ormawaId !== user.ormawaId) {
+        console.warn(
+          "⚠️ ORGANIZER mencoba mengedit event dari ormawa lain:",
+          editingEvent.ormawaId,
+          "Expected:",
+          user.ormawaId
+        );
+        onCancel(); // Tutup form jika ormawaId tidak sesuai
+      }
+    }
+  }, [user, editingEvent, onCancel]);
 
   const handleInputChange = (field, value) => {
     // Jangan izinkan perubahan eventType saat edit
@@ -74,7 +95,7 @@ export default function EventForm({
     if (file) {
       setLocalFormData((prev) => ({
         ...prev,
-        photoFile: file
+        photoFile: file,
       }));
     }
   };
@@ -96,25 +117,73 @@ export default function EventForm({
     currentEventType &&
     localFormData.startEvent &&
     (!isPrizeRequired || localFormData.prize) &&
-    (!isEventRegionRequired || localFormData.eventRegion);
+    (!isEventRegionRequired || localFormData.eventRegion) &&
+    (user?.role !== "ADMIN" || localFormData.ormawaId);
 
   const eventRegionOptions = [
     { value: "Regional", label: "Regional" },
     { value: "National", label: "National" },
-    { value: "International", label: "International" }
+    { value: "International", label: "International" },
   ];
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Pastikan eventType tetap dikirim (ambil dari editingEvent jika edit)
+    console.log("👉 localFormData sebelum submit:", localFormData);
     onSubmit({
       ...localFormData,
-      eventType: currentEventType
+      eventType: currentEventType,
+      ormawaId: localFormData.ormawaId,
     });
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Dropdown Ormawa untuk Admin saat tambah event */}
+      {user?.role === "ADMIN" && (
+        <div className="space-y-2">
+          <Label>Ormawa *</Label>
+          {isLoadingOrmawa ? (
+            <p>Memuat daftar ormawa...</p>
+          ) : ormawaList.length === 0 ? (
+            <p className="text-red-500">
+              Tidak ada ormawa tersedia. Hubungi administrator.
+            </p>
+          ) : editingEvent ? (
+            <Input
+              value={
+                ormawaList.find((o) => o.id === localFormData.ormawaId)
+                  ?.ormawaName || "Tidak ditemukan"
+              }
+              disabled
+              readOnly
+            />
+          ) : (
+            <Select
+              value={localFormData.ormawaId}
+              onValueChange={(value) => {
+                console.log("Admin pilih ormawaId:", value);
+                setLocalFormData((prev) => ({ ...prev, ormawaId: value }));
+              }}
+              required
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Pilih ormawa" />
+              </SelectTrigger>
+              <SelectContent>
+                {ormawaList.map((ormawa) => (
+                  <SelectItem
+                    key={ormawa.id || ormawa.ormawaName}
+                    value={String(ormawa.id)}
+                  >
+                    {ormawa.ormawaName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label>Nama Event *</Label>
@@ -130,7 +199,9 @@ export default function EventForm({
           {/* Jika edit event, tampilkan eventType sebagai text saja */}
           {editingEvent ? (
             <Input
-              value={eventTypesObj[editingEvent.eventType] || editingEvent.eventType}
+              value={
+                eventTypesObj[editingEvent.eventType] || editingEvent.eventType
+              }
               disabled
               readOnly
             />
@@ -241,7 +312,11 @@ export default function EventForm({
           Batal
         </Button>
         <Button type="submit" disabled={!isFormValid || isPending}>
-          {isPending ? "Menyimpan..." : editingEvent ? "Update Event" : "Tambah Event"}
+          {isPending
+            ? "Menyimpan..."
+            : editingEvent
+            ? "Update Event"
+            : "Tambah Event"}
         </Button>
       </DialogFooter>
     </form>
