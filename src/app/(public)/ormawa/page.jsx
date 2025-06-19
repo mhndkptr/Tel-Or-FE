@@ -15,9 +15,10 @@ export default function Home() {
   if (isLoading) return <div>Loading...</div>;
 
   // Filter by search
-  const filtered = ormawaData.filter((o) =>
-    o.ormawaName?.toLowerCase().includes(search.toLowerCase()) ||
-    o.description?.toLowerCase().includes(search.toLowerCase())
+  const filtered = ormawaData.filter(
+    (o) =>
+      o.ormawaName?.toLowerCase().includes(search.toLowerCase()) ||
+      o.description?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -34,7 +35,7 @@ export default function Home() {
             placeholder="Search Ormawa..."
             className="w-full py-6"
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onChange={(e) => setSearch(e.target.value)}
           />
           <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
         </div>
@@ -47,24 +48,40 @@ export default function Home() {
             </div>
           )}
           {filtered.map((ormawa) => (
-            <div key={ormawa.id} className="border-2 border-gray-300 rounded-3xl p-6 bg-white flex flex-col">
+            <div
+              key={ormawa.id}
+              className="border-2 border-gray-300 rounded-3xl p-6 bg-white flex flex-col"
+            >
               <div className="text-center mb-4">
                 {ormawa.iconUrl ? (
                   <Image
                     src={ormawa.iconUrl}
-                    alt={ormawa.ormawaName}
+                    alt={ormawa.name}
                     width={120}
                     height={120}
                     className="h-28 w-28 mx-auto object-contain rounded-full bg-gray-100"
                   />
                 ) : (
                   <div className="h-28 w-28 flex items-center justify-center mx-auto bg-gray-100 rounded-full">
-                    <span className="text-4xl">🏛️</span>
+                    {ormawa.icon ? (
+                      <img
+                        src={`http://localhost:3636${ormawa.icon}`}
+                        alt="Icon"
+                        className="w-25 h-25 object-cover rounded-full"
+                      />
+                    ) : (
+                      <div className="w-20 h-20 flex items-center justify-center bg-gray-100 border rounded">
+                        <span className="text-sm text-gray-400">No Icon</span>
+                      </div>
+                    )}
+                    <span className="text-4xl"></span>
                   </div>
                 )}
               </div>
 
-              <h3 className="font-bold text-lg text-center mb-2">{ormawa.ormawaName}</h3>
+              <h3 className="font-bold text-lg text-center mb-2">
+                {ormawa.ormawaName}
+              </h3>
 
               {/* Badges */}
               <div className="flex flex-wrap justify-center gap-2 mb-3">
@@ -92,7 +109,7 @@ export default function Home() {
                     Pendaftaran Dibuka
                   </span>
                 ) : (
-                  <span className="inline-block bg-gray-200 text-gray-500 px-2 py-0.5 rounded text-xs font-semibold">
+                  <span className="inline-block bg-red-200 text-gray-500 px-2 py-0.5 rounded text-xs font-semibold">
                     Pendaftaran Ditutup
                   </span>
                 )}
@@ -115,14 +132,13 @@ export default function Home() {
                 <div className="mb-4 flex justify-center">
                   <Image
                     src={ormawa.backgroundUrl}
-                    alt={ormawa.ormawaName + " background"}
+                    alt={ormawa.name + " background"}
                     width={240}
                     height={80}
                     className="rounded-xl object-cover h-20 w-60"
                   />
                 </div>
               )}
-
               <Button asChild variant="destructive" className="w-full mt-auto">
                 <Link href={`/ormawa/${ormawa.id}`}>Detail</Link>
               </Button>
