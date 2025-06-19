@@ -2,6 +2,7 @@
 
 import AddButton from "@/components/_shared/AddButton";
 import SearchBox from "@/components/_shared/SearchBox";
+import Pagination from "@/components/ui/pagination";
 import { useState, useEffect } from "react";
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -55,6 +56,9 @@ export default function UsersPage() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 5;
+
   useEffect(() => {
     if (users && Array.isArray(users)) {
       const filtered = users.filter((user) =>
@@ -63,8 +67,14 @@ export default function UsersPage() {
         user.role.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredUsers(filtered);
+      setCurrentPage(1); // Reset ke halaman 1 saat pencarian
     }
   }, [users, searchTerm]);
+
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
   const handleSaveUser = (userData) => {
     if (isEditing && selectedUser?.id) {
@@ -92,9 +102,9 @@ export default function UsersPage() {
         </div>
         <Button
           onClick={() => {
-            setSelectedUser(null);
-            setIsEditing(false);
-            setIsUserDialogOpen(true);
+            setSelectedUser(null);       
+            setIsEditing(false);         
+            setIsUserDialogOpen(true);   
           }}
         >
           Add User
@@ -110,7 +120,7 @@ export default function UsersPage() {
           <div className="mb-4">
             <SearchBox
               value={searchTerm}
-              onChange={(value) => setSearchTerm(value)} 
+              onChange={(value) => setSearchTerm(value)}
               placeholder="Search by name, email or role..."
             />
           </div>
@@ -126,7 +136,7 @@ export default function UsersPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredUsers.map((user) => (
+                {currentUsers.map((user) => (
                   <TableRow key={user.id}>
                     <TableCell>{user.fullname}</TableCell>
                     <TableCell>{user.email}</TableCell>
@@ -168,6 +178,14 @@ export default function UsersPage() {
                 ))}
               </TableBody>
             </Table>
+          </div>
+
+          <div className="mt-4">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           </div>
         </CardContent>
       </Card>
