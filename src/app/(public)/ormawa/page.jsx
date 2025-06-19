@@ -65,7 +65,7 @@ export default function Home() {
                   <div className="h-28 w-28 flex items-center justify-center mx-auto bg-gray-100 rounded-full">
                     {ormawa.icon ? (
                       <img
-                        src={`http://localhost:3636${ormawa.icon}`}
+                        src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${ormawa.icon}`}
                         alt="Icon"
                         className="w-25 h-25 object-cover rounded-full"
                       />
