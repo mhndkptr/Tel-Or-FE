@@ -62,3 +62,28 @@ We welcome contributions from fellow developers who are passionate about buildin
 ## 📜 License
 
 This project is open-source under the @mhndptr License. See the `LICENSE` file for more details.
+
+## 👥 Contributors
+
+Thanks to these amazing people for making Tel-Or better!
+
+<p align="left">
+  <a href="https://github.com/mhndkptr" target="_blank">
+    <img src="https://github.com/mhndkptr.png" width="60" alt="mhndkptr" style="border-radius:8%;margin-right:8px;" />
+  </a>
+  <a href="https://github.com/ardhiancalwa" target="_blank">
+    <img src="https://github.com/ardhiancalwa.png" width="60" alt="ardhiancalwa" style="border-radius:8%;margin-right:8px;" />
+  </a>
+  <a href="https://github.com/fazarirazkaa" target="_blank">
+    <img src="https://github.com/fazarirazkaa.png" width="60" alt="fazarirazkaa" style="border-radius:8%;margin-right:8px;" />
+  </a>
+  <a href="https://github.com/BeLieM" target="_blank">
+    <img src="https://github.com/BeLieM.png" width="60" alt="BeLieM" style="border-radius:8%;margin-right:8px;" />
+  </a>
+  <a href="https://github.com/hilminp" target="_blank">
+    <img src="https://github.com/hilminp.png" width="60" alt="hilminp" style="border-radius:8%;margin-right:8px;" />
+  </a>
+  <a href="https://github.com/Azzizag" target="_blank">
+    <img src="https://github.com/Azzizag.png" width="60" alt="Azzizag" style="border-radius:8%;margin-right:8px;" />
+  </a>
+</p>

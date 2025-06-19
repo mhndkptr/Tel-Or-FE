@@ -35,6 +35,8 @@ import {
 } from "@/hooks/faq.hooks";
 import FaqForm from "@/components/core/faq/faq-form";
 import FaqTable from "@/components/core/faq/faq-table";
+import AddButton from "@/components/_shared/AddButton";
+import SearchBox from "@/components/_shared/SearchBox";
 
 export default function FAQManagement() {
   const categoriesObj = {
@@ -150,10 +152,27 @@ export default function FAQManagement() {
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button onClick={() => resetForm()}>
-                <Plus className="w-4 h-4 mr-2" />
-                Tambah FAQ
-              </Button>
+              <AddButton label="Tambah FAQ">
+                {({ close }) => (
+                  <FaqForm
+                    formData={formData}
+                    setFormData={setFormData}
+                    categoriesObj={categoriesObj}
+                    onSubmit={(e) => {
+                      handleSubmit(e);
+                      close();
+                    }}
+                    onCancel={() => {
+                      resetForm();
+                      close();
+                    }}
+                    isPending={
+                      addFaqMutation.isPending || editFaqMutation.isPending
+                    }
+                    editingFaq={editingFaq}
+                  />
+                )}
+              </AddButton>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px]">
               <DialogHeader>
@@ -193,11 +212,10 @@ export default function FAQManagement() {
               <div className="flex-1">
                 <div className="relative">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Cari pertanyaan atau jawaban..."
+                  <SearchBox
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
+                    onChange={setSearchTerm}
+                    placeholder="Cari pertanyaan atau jawaban..."
                   />
                 </div>
               </div>
