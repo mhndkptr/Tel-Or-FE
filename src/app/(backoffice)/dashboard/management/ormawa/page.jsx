@@ -168,7 +168,9 @@ export default function OrmawaManagement() {
   const { ormawaData, isLoading, refetch } = useGetAllOrmawa();
   const addOrmawaMutation = useAddOrmawaMutation({ successAction: refetch });
   const editOrmawaMutation = useEditOrmawaMutation({ successAction: refetch });
-  const deleteOrmawaMutation = useDeleteOrmawaMutation({ successAction: refetch });
+  const deleteOrmawaMutation = useDeleteOrmawaMutation({
+    successAction: refetch,
+  });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -233,7 +235,10 @@ export default function OrmawaManagement() {
     payload.append("ormawaName", formData.ormawaName || "");
     payload.append("description", formData.description || "");
     payload.append("content", formData.content || "");
-    payload.append("isOpenRegistration", formData.isOpenRegistration ? "true" : "false");
+    payload.append(
+      "isOpenRegistration",
+      formData.isOpenRegistration ? "true" : "false"
+    );
     payload.append("category", formData.category || "");
 
     if (formData.category === "LAB" && formData.labType) {
