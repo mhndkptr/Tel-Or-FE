@@ -43,9 +43,9 @@ export default function LoginPage() {
   });
 
   return (
-    <div className="min-h-screen bg-greyDark-100 flex m-auto">
+    <div className="min-h-screen bg-white md:bg-greyDark-100 flex m-auto">
       <div className="flex justify-center md:items-center w-full">
-        <div className="grid lg:grid-cols-2 overflow-hidden rounded-lg min-h-[80%] md:max-w-[85%] md:centered-shadow bg-white">
+        <div className="grid lg:grid-cols-2 overflow-hidden rounded-lg w-full min-h-[80%] md:max-w-[85%] md:centered-shadow bg-white">
           <div className="flex flex-col p-5 md:p-12">
             <div className="md:mb-6 mb-4">
               <Image
