@@ -64,12 +64,20 @@ const INITIAL_FORM_DATA = {
 };
 
 export default function OrmawaManagement() {
-  const { user } = useAuth();
+  const { user, checkUserLoggedIn } = useAuth();
   const { ormawaData, isLoading, refetch } = useGetAllOrmawa();
-  const addOrmawaMutation = useAddOrmawaMutation({ successAction: refetch });
+  const addOrmawaMutation = useAddOrmawaMutation({
+    successAction: () => {
+      refetch();
+      checkUserLoggedIn();
+    },
+  });
   const editOrmawaMutation = useEditOrmawaMutation({ successAction: refetch });
   const deleteOrmawaMutation = useDeleteOrmawaMutation({
-    successAction: refetch,
+    successAction: () => {
+      refetch();
+      checkUserLoggedIn();
+    },
   });
 
   // State management

@@ -1,8 +1,12 @@
 "use client";
 
 import { DashboardHeader } from "@/components/_shared/header/DashboardHeader";
+import { useAuth } from "@/contexts/authContext";
+import { ROLE } from "@/utils/constants";
 
 export default function DashboardOverviewPage() {
+  const { user } = useAuth();
+
   return (
     <>
       <DashboardHeader title="Dashboard" />
@@ -18,12 +22,14 @@ export default function DashboardOverviewPage() {
 
         {/* Features Section */}
         <section className="grid md:grid-cols-2 grid-cols-1 gap-4">
-          <div className="bg-white rounded-2xl shadow-sm p-5 hover:shadow-md transition">
-            <h3 className="text-lg font-semibold text-gray-800 mb-1">Manajemen Pengguna</h3>
-            <p className="text-sm text-gray-600">
-              Tambah, edit, atau hapus data pengguna, termasuk peran admin dan organizer.
-            </p>
-          </div>
+          {user.role === ROLE.ADMIN && (
+            <div className="bg-white rounded-2xl shadow-sm p-5 hover:shadow-md transition">
+              <h3 className="text-lg font-semibold text-gray-800 mb-1">Manajemen Pengguna</h3>
+              <p className="text-sm text-gray-600">
+                Tambah, edit, atau hapus data pengguna, termasuk peran admin dan organizer.
+              </p>
+            </div>
+          )}
 
           <div className="bg-white rounded-2xl shadow-sm p-5 hover:shadow-md transition">
             <h3 className="text-lg font-semibold text-gray-800 mb-1">Event & Kegiatan</h3>
