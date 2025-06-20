@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DialogFooter } from "@/components/ui/dialog";
 import { ROLE } from "@/utils/constants";
+import BaseRichTextEditor from "@/components/_shared/rich-text-editor/BaseRichTextEditor";
 
 export default function EventForm({
   formData,
@@ -271,11 +272,10 @@ export default function EventForm({
 
       <div className="space-y-2">
         <Label>Konten Detail</Label>
-        <Textarea
+        <BaseRichTextEditor
+          placeholder="Masukkan konten detail event"
           value={localFormData.content}
           onChange={(e) => handleInputChange("content", e.target.value)}
-          placeholder="Masukkan konten detail event"
-          rows={8}
         />
       </div>
 
