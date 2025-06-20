@@ -68,10 +68,13 @@ export default function EventManagement() {
   };
 
   const handleSubmit = (data) => {
-    if (!user?.ormawa?.id || user?.ormawa?.id === "undefined" || user?.ormawa?.id === "") {
-      alert("Ormawa ID tidak valid");
-      return;
+    if (data?.role === ROLE.ORGANIZER) {
+      if (!user?.ormawa?.id || user?.ormawa?.id === "undefined" || user?.ormawa?.id === "") {
+        alert("Ormawa ID tidak valid");
+        return;
+      }
     }
+
     const payload = new FormData();
     payload.append("eventName", data.eventName);
     if (!editingEvent) {
@@ -86,7 +89,13 @@ export default function EventManagement() {
     if (data.photoFile) {
       payload.append("image", data.photoFile);
     }
-    payload.append("ormawaId", user?.ormawa?.id);
+
+    if (user?.role === ROLE.ADMIN) {
+      payload.append("ormawaId", data?.ormawaId);
+    } else {
+      payload.append("ormawaId", user?.ormawa?.id);
+    }
+
     if (editingEvent) {
       payload.append("eventId", editingEvent.eventId);
       editEventMutation.mutate({ payload });
