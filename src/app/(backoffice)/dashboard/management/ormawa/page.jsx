@@ -35,6 +35,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import BaseRichTextEditor from "@/components/_shared/rich-text-editor/BaseRichTextEditor";
 
 const LAB_TYPE_ENUM = ["PRAKTIKUM", "RESEARCH"];
 const CATEGORIES = ["LAB", "ORGANIZATION", "UKM", "COMMUNITY"];
@@ -513,12 +514,10 @@ export default function OrmawaManagement() {
               {/* Content */}
               <div className="space-y-2">
                 <Label htmlFor="content">Konten *</Label>
-                <Textarea
-                  id="content"
+                <BaseRichTextEditor
+                  placeholder="Masukkan konten"
                   value={formData.content}
                   onChange={(e) => handleFormChange("content", e.target.value)}
-                  rows={4}
-                  required
                 />
               </div>
 
