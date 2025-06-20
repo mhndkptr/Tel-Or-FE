@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -101,13 +101,15 @@ export default function EventForm({
   const isEventRegionRequired =
     currentEventType === "LOMBA" || currentEventType === "SEMINAR" || currentEventType === "BEASISWA";
 
-  const isFormValid =
-    !!localFormData.eventName &&
-    !!currentEventType &&
-    !!localFormData.startEvent &&
-    (!isPrizeRequired || !!localFormData.prize) &&
-    (!isEventRegionRequired || !!localFormData.eventRegion) &&
-    (user?.role === ROLE.ADMIN || !!localFormData.ormawaId);
+  const isFormValid = useMemo(() => {
+    return (
+      !!localFormData.eventName &&
+      !!currentEventType &&
+      !!localFormData.startEvent &&
+      (!isPrizeRequired || !!localFormData.prize) &&
+      (!isEventRegionRequired || !!localFormData.eventRegion)
+    );
+  }, [localFormData, currentEventType, isPrizeRequired, isEventRegionRequired, user]);
 
   const eventRegionOptions = [
     { value: "Regional", label: "Regional" },
@@ -123,6 +125,8 @@ export default function EventForm({
       ormawaId: localFormData.ormawaId,
     });
   };
+
+  console.log("Form Valid: ", isFormValid);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -275,7 +279,7 @@ export default function EventForm({
         <BaseRichTextEditor
           placeholder="Masukkan konten detail event"
           value={localFormData.content}
-          onChange={(e) => handleInputChange("content", e.target.value)}
+          onChange={(value) => handleInputChange("content", value)}
         />
       </div>
 
