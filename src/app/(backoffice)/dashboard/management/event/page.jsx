@@ -5,13 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
 import ToastContent from "@/components/_shared/toast/ToastContent";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -20,26 +14,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Search, Filter } from "lucide-react";
 
 import EventForm from "@/components/core/event/event-form";
 import EventTable from "@/components/core/event/event-table";
 import { useGetAllOrmawa } from "@/hooks/ormawa.hooks";
 
-import {
-  useGetAllEvent,
-  useAddEventMutation,
-  useEditEventMutation,
-  useDeleteEventMutation,
-} from "@/hooks/event.hooks";
+import { useGetAllEvent, useAddEventMutation, useEditEventMutation, useDeleteEventMutation } from "@/hooks/event.hooks";
 import { useAuth } from "@/contexts/authContext";
+import { ROLE } from "@/utils/constants";
 
 export default function EventManagement() {
   const { user } = useAuth();
@@ -84,12 +68,8 @@ export default function EventManagement() {
   };
 
   const handleSubmit = (data) => {
-    if (
-      !data.ormawaId ||
-      data.ormawaId === "undefined" ||
-      data.ormawaId === ""
-    ) {
-      alert("Ormawa ID tidak valid. Pilih Ormawa dengan benar.");
+    if (!user?.ormawa?.id || user?.ormawa?.id === "undefined" || user?.ormawa?.id === "") {
+      alert("Ormawa ID tidak valid");
       return;
     }
     const payload = new FormData();
@@ -106,8 +86,7 @@ export default function EventManagement() {
     if (data.photoFile) {
       payload.append("image", data.photoFile);
     }
-    payload.append("ormawaId", String(data.ormawaId));
-    console.log("👉 Payload entries:", [...payload.entries()]);
+    payload.append("ormawaId", user?.ormawa?.id);
     if (editingEvent) {
       payload.append("eventId", editingEvent.eventId);
       editEventMutation.mutate({ payload });
@@ -137,10 +116,7 @@ export default function EventManagement() {
             >
               Ya, hapus
             </button>
-            <button
-              className="px-3 py-1 bg-gray-200 rounded"
-              onClick={closeToast}
-            >
+            <button className="px-3 py-1 bg-gray-200 rounded" onClick={closeToast}>
               Batal
             </button>
           </div>
@@ -176,8 +152,7 @@ export default function EventManagement() {
 
   const filteredEvents = (eventsData || []).filter((event) => {
     const eventTypeMatch =
-      selectedEventType === "all" ||
-      (event.eventType || "").toUpperCase() === selectedEventType.toUpperCase();
+      selectedEventType === "all" || (event.eventType || "").toUpperCase() === selectedEventType.toUpperCase();
 
     const searchMatch =
       searchTerm === "" ||
@@ -185,20 +160,15 @@ export default function EventManagement() {
       event.description?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const ormawaMatch =
-      !user?.role === "ORGANIZER" ||
-      (user?.role === "ORGANIZER" &&
-        user.ormawaId &&
-        event.ormawaId === user.ormawaId);
+      user?.role === ROLE.ADMIN ||
+      (user?.role === ROLE.ORGANIZER && user?.ormawa?.id && event.ormawaId === user?.ormawa?.id);
 
     return eventTypeMatch && searchMatch && ormawaMatch;
   });
 
   const { ormawaData, isLoading: isLoadingOrmawa } = useGetAllOrmawa();
 
-  if (
-    user?.role === "ORGANIZER" &&
-    (!user.ormawaId || user.ormawaId === "undefined")
-  ) {
+  if (user?.role === "ORGANIZER" && (!user?.ormawa || user?.ormawa?.id === "undefined")) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
         <div className="bg-red-50 border border-red-300 rounded-lg shadow-md p-6">
@@ -217,18 +187,13 @@ export default function EventManagement() {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold">Event Management</h1>
-            <p className="text-muted-foreground">
-              Kelola semua event dan kegiatan
-            </p>
+            <p className="text-muted-foreground">Kelola semua event dan kegiatan</p>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button
                 onClick={() => setEditingEvent(null)}
-                disabled={
-                  user?.role === "ORGANIZER" &&
-                  (!user.ormawaId || user.ormawaId === "undefined")
-                }
+                disabled={user?.role === "ORGANIZER" && (!user?.ormawa || user?.ormawa?.id === "undefined")}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Tambah Event
@@ -236,13 +201,9 @@ export default function EventManagement() {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>
-                  {editingEvent ? "Edit Event" : "Tambah Event Baru"}
-                </DialogTitle>
+                <DialogTitle>{editingEvent ? "Edit Event" : "Tambah Event Baru"}</DialogTitle>
                 <DialogDescription>
-                  {editingEvent
-                    ? "Edit informasi event yang sudah ada"
-                    : "Tambahkan event dan kegiatan baru"}
+                  {editingEvent ? "Edit informasi event yang sudah ada" : "Tambahkan event dan kegiatan baru"}
                 </DialogDescription>
               </DialogHeader>
               <EventForm
@@ -250,9 +211,7 @@ export default function EventManagement() {
                 eventTypesObj={eventTypesObj}
                 onSubmit={handleSubmit}
                 onCancel={resetForm}
-                isPending={
-                  addEventMutation.isPending || editEventMutation.isPending
-                }
+                isPending={addEventMutation.isPending || editEventMutation.isPending}
                 editingEvent={editingEvent}
                 user={user}
                 ormawaList={ormawaData}
@@ -265,9 +224,7 @@ export default function EventManagement() {
         <Card>
           <CardHeader>
             <CardTitle>Filter & Pencarian</CardTitle>
-            <CardDescription>
-              Cari dan filter event berdasarkan tipe
-            </CardDescription>
+            <CardDescription>Cari dan filter event berdasarkan tipe</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col sm:flex-row gap-4">
@@ -281,10 +238,7 @@ export default function EventManagement() {
                 />
               </div>
               <div className="sm:w-48">
-                <Select
-                  value={selectedEventType}
-                  onValueChange={setSelectedEventType}
-                >
+                <Select value={selectedEventType} onValueChange={setSelectedEventType}>
                   <SelectTrigger>
                     <Filter className="w-4 h-4 mr-2" />
                     <SelectValue placeholder="Pilih tipe event" />

@@ -1,51 +1,38 @@
 // ✅ user-dialog.jsx
 "use client";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { useState, useEffect } from "react";
 
 export function UserDialog({ open, onOpenChange, user, isEditing, onSave }) {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState("ADMIN");
+  const [role, setRole] = useState("ORGANIZER");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-  if (open && !user) {
-    // Tambah user, reset semua field
-    setFullname("");
-    setEmail("");
-    setRole("ADMIN");
-    setPassword("");
-  }
+    if (open && !user) {
+      // Tambah user, reset semua field
+      setFullname("");
+      setEmail("");
+      setRole("ORGANIZER");
+      setPassword("");
+    }
 
-  if (open && user) {
-    // Edit user
-    setFullname(user.fullname || "");
-    setEmail(user.email || "");
-    setRole(user.role || "ADMIN");
-    setPassword("");
-  }
+    if (open && user) {
+      // Edit user
+      setFullname(user.fullname || "");
+      setEmail(user.email || "");
+      setRole(user.role || "ADMIN");
+      setPassword("");
+    }
 
-  setErrorMessage("");
-}, [user, open]);
-
+    setErrorMessage("");
+  }, [user, open]);
 
   const handleSubmit = () => {
     if (!fullname || !email || !role || (!isEditing && !password)) {
@@ -79,8 +66,10 @@ export function UserDialog({ open, onOpenChange, user, isEditing, onSave }) {
               onChange={(e) => setPassword(e.target.value)}
             />
           )}
-          <Select value={role} onValueChange={setRole}>
-            <SelectTrigger><SelectValue placeholder="Select Role" /></SelectTrigger>
+          <Select disabled value={role} onValueChange={setRole}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select Role" />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="ADMIN">ADMIN</SelectItem>
               <SelectItem value="ORGANIZER">ORGANIZER</SelectItem>

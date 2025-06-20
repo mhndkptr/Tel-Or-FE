@@ -12,11 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { useGetAllEvent } from "@/hooks/event.hooks";
@@ -31,13 +27,7 @@ export default function EventPage() {
   });
   const { eventsData } = useGetAllEvent();
 
-  const eventTypes = [
-    "SEMINAR",
-    "LOMBA",
-    "BEASISWA",
-    "COMPANY VISIT",
-    "OPEN RECRUITMENT",
-  ];
+  const eventTypes = ["SEMINAR", "LOMBA", "BEASISWA", "COMPANY VISIT", "OPEN RECRUITMENT"];
 
   const formatDate = (date) => {
     if (!date) return "";
@@ -52,13 +42,9 @@ export default function EventPage() {
   const resetDateFilter = () => setDateRange({ from: undefined, to: undefined });
 
   const filteredEvents = (eventsData || []).filter((event) => {
-    const typeMatch = selectedType
-      ? event.eventType === selectedType
-      : true;
+    const typeMatch = selectedType ? event.eventType === selectedType : true;
 
-    const searchMatch = searchQuery
-      ? event.eventName.toLowerCase().includes(searchQuery.toLowerCase())
-      : true;
+    const searchMatch = searchQuery ? event.eventName.toLowerCase().includes(searchQuery.toLowerCase()) : true;
 
     let dateMatch = true;
     const eventStart = new Date(event.startEvent);
@@ -75,11 +61,10 @@ export default function EventPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen max-w-7xl mx-auto">
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold mb-6">
-          <span className="text-red-600">Event</span>{" "}
-          <span className="text-black">List</span>
+          <span className="text-red-600">Event</span> <span className="text-black">List</span>
         </h1>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 gap-2 mb-8">
@@ -100,27 +85,19 @@ export default function EventPage() {
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="flex items-center gap-2 text-sm">
                 <Filter className="h-4 w-4" />
-                {selectedType
-                  ? selectedType.replace("_", " ")
-                  : "Filter Tipe Event"}
+                {selectedType ? selectedType.replace("_", " ") : "Filter Tipe Event"}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {eventTypes.map((type) => (
-                <DropdownMenuItem
-                  key={type}
-                  onSelect={() => setSelectedType(type)}
-                >
+                <DropdownMenuItem key={type} onSelect={() => setSelectedType(type)}>
                   {type}
                 </DropdownMenuItem>
               ))}
               {selectedType && (
                 <>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onSelect={resetTypeFilter}
-                    className="text-red-600 focus:text-red-600"
-                  >
+                  <DropdownMenuItem onSelect={resetTypeFilter} className="text-red-600 focus:text-red-600">
                     <X className="h-4 w-4 mr-2" />
                     Reset Filter
                   </DropdownMenuItem>
@@ -160,9 +137,7 @@ export default function EventPage() {
                 mode="range"
                 defaultMonth={dateRange.from}
                 selected={dateRange}
-                onSelect={(range) =>
-                  setDateRange(range || { from: undefined, to: undefined })
-                }
+                onSelect={(range) => setDateRange(range || { from: undefined, to: undefined })}
                 numberOfMonths={2}
               />
               {(dateRange.from || dateRange.to) && (
@@ -184,13 +159,9 @@ export default function EventPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredEvents.length > 0 ? (
-            filteredEvents.map((event) => (
-              <EventCard key={event.eventId} event={event} />
-            ))
+            filteredEvents.map((event) => <EventCard key={event.eventId} event={event} />)
           ) : (
-            <div className="col-span-full text-center text-gray-500">
-              Tidak ada event yang sesuai filter.
-            </div>
+            <div className="col-span-full text-center text-gray-500">Tidak ada event yang sesuai filter.</div>
           )}
         </div>
       </div>

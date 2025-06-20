@@ -76,13 +76,6 @@ export function DashboardSidebar() {
         isActive: pathname === "/dashboard",
       },
       {
-        type: "single",
-        name: "Master Pengguna",
-        href: "/dashboard/master-user",
-        icon: ShieldUser,
-        isActive: pathname === "/dashboard/master-user",
-      },
-      {
         type: "collapsible",
         name: "Management",
         icon: UserRoundCog,
@@ -91,14 +84,9 @@ export function DashboardSidebar() {
         isActive: pathname.startsWith("/dashboard/management"),
         items: [
           {
-            name: "Faq",
-            href: "/dashboard/management/faq",
-            isActive: pathname.startsWith("/dashboard/management/faq"),
-          },
-          {
-            name: "Event",
-            href: "/dashboard/management/event",
-            isActive: pathname.startsWith("/dashboard/management/event"),
+            name: "User",
+            href: "/dashboard/management/user",
+            isActive: pathname.startsWith("/dashboard/management/user"),
           },
           {
             name: "Ormawa",
@@ -106,18 +94,16 @@ export function DashboardSidebar() {
             isActive: pathname.startsWith("/dashboard/management/ormawa"),
           },
           {
-            name: "User",
-            href: "/dashboard/management/user",
-            isActive: pathname.startsWith("/dashboard/management/user"),
+            name: "Event",
+            href: "/dashboard/management/event",
+            isActive: pathname.startsWith("/dashboard/management/event"),
+          },
+          {
+            name: "Faq",
+            href: "/dashboard/management/faq",
+            isActive: pathname.startsWith("/dashboard/management/faq"),
           },
         ],
-      },
-      {
-        type: "single",
-        name: "Setting",
-        href: "/dashboard/setting",
-        icon: Settings,
-        isActive: pathname === "/dashboard/setting",
       },
     ];
 
@@ -139,24 +125,22 @@ export function DashboardSidebar() {
         isActive: pathname.startsWith("/dashboard/management"),
         items: [
           {
+            name: "Ormawa",
+            href: "/dashboard/management/ormawa",
+            isActive: pathname.startsWith("/dashboard/management/ormawa"),
+          },
+          {
             name: "Event",
             href: "/dashboard/management/event",
             isActive: pathname.startsWith("/dashboard/management/event"),
           },
         ],
       },
-      {
-        type: "single",
-        name: "Setting",
-        href: "/dashboard/setting",
-        icon: Settings,
-        isActive: pathname === "/dashboard/setting",
-      },
     ];
 
   return (
     <Sidebar collapsible="icon" className={"!bg-white"}>
-      <SidebarHeader className="pt-6 pb-3">
+      <SidebarHeader className="pt-6 pb-3 bg-white">
         <div
           className={`flex items-center ${
             open ? "gap-2 px-3 justify-between" : "justify-center"
@@ -195,7 +179,7 @@ export function DashboardSidebar() {
           />
         </div>
       </SidebarHeader>
-      <SidebarContent className="px-3 py-2 w-full">
+      <SidebarContent className="px-3 py-2 w-full bg-white">
         <SidebarMenu>
           {sidebarMenus.map((menu, index) => (
             <React.Fragment key={menu.name}>
@@ -206,7 +190,7 @@ export function DashboardSidebar() {
                     isActive={menu.isActive}
                     tooltip={menu.name}
                     onClick={() => router.push(menu.href)}
-                    className={`mx-auto cursor-pointer transition ${
+                    className={`mx-auto !py-5 cursor-pointer transition ${
                       menu.isActive ? "bg-[#F5F5F5] border border-[#D6D6D6]" : "bg-[#FCFCFC] hover:bg-[#F5F5F5]"
                     }`}
                   >
@@ -227,7 +211,7 @@ export function DashboardSidebar() {
                   <Collapsible open={menu.isOpen} onOpenChange={() => toggleSection(menu.section)} className="w-full">
                     <CollapsibleTrigger asChild>
                       <SidebarMenuButton
-                        className={`w-full cursor-pointer mx-auto transition ${
+                        className={`w-full cursor-pointer mx-auto transition !py-5 ${
                           menu.isActive ? "bg-[#F5F5F5] border border-[#D6D6D6]" : "bg-[#FCFCFC] hover:bg-[#F5F5F5]"
                         }  ${open ? "justify-between" : "justify-center"}`}
                         tooltip={menu.name}
@@ -268,7 +252,7 @@ export function DashboardSidebar() {
                               isActive={pathname === item.href}
                               tooltip={item.name}
                               onClick={() => router.push(item.href)}
-                              className={`mx-auto cursor-pointer py-1.5 transition ${
+                              className={`mx-auto cursor-pointer py-3 transition ${
                                 item.isActive ? "bg-[#F5F5F5] border border-[#D6D6D6]" : "hover:bg-[#F5F5F5]"
                               }`}
                             >
@@ -291,12 +275,12 @@ export function DashboardSidebar() {
           ))}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="p-3">
+      <SidebarFooter className="p-3 bg-white">
         <Button
           type="button"
           onClick={() => logout()}
           variant="ghostDestructive"
-          className={`w-full ${open ? "justify-center" : "justify-center"}`}
+          className={`w-full ${open ? "justify-center" : "justify-center"} py-3 cursor-pointer`}
           size="md"
         >
           <LogOut className={`${open ? "mr-2" : ""} size-5`} />

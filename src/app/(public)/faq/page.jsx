@@ -4,12 +4,7 @@ import { fetch as baseFetch } from "@/utils/baseFetch";
 import "@/app/globals.css";
 import { TableOfContents } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "@/components/ui/accordion";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
 const CATEGORIES = [
   { key: "umum", label: "Umum" },
@@ -41,18 +36,12 @@ export default function FAQPage() {
   }, [category]);
   return (
     <div className="min-h-screen">
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-7xl mx-auto py-12">
         <div className="text-center mb-16">
-          <h1
-            className="text-4xl md:text-5xl font-bold mb-6"
-            style={{ color: "var(--color-greyDark-900)" }}
-          >
+          <h1 className="text-4xl md:text-5xl font-bold mb-6" style={{ color: "var(--color-greyDark-900)" }}>
             Yuk, Tanya Dulu
           </h1>
-          <p
-            className="text-lg max-w-2xl mx-auto leading-relaxed"
-            style={{ color: "var(--color-greyLight-600)" }}
-          >
+          <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: "var(--color-greyLight-600)" }}>
             Semua yang sering ditanyain soal organisasi kampus,
             <br />
             kami jawab di sini secara lengkap dan jelas.
@@ -81,13 +70,8 @@ export default function FAQPage() {
                       style={{
                         color: "var(--color-greyLight-700)",
                       }}
-                      onMouseOver={(e) =>
-                        (e.currentTarget.style.color = "var(--color-red-600)")
-                      }
-                      onMouseOut={(e) =>
-                        (e.currentTarget.style.color =
-                          "var(--color-greyLight-700)")
-                      }
+                      onMouseOver={(e) => (e.currentTarget.style.color = "var(--color-red-600)")}
+                      onMouseOut={(e) => (e.currentTarget.style.color = "var(--color-greyLight-700)")}
                     >
                       {cat.label}
                     </button>
@@ -100,16 +84,9 @@ export default function FAQPage() {
           <div className="md:col-span-3">
             <div className="p-6">
               <div className="flex items-center mb-8">
-                <TableOfContents
-                  className="w-6 h-6 mr-3"
-                  style={{ color: "var(--color-greyLight-700)" }}
-                />
-                <h2
-                  className="text-2xl font-bold"
-                  style={{ color: "var(--color-greyDark-900)" }}
-                >
-                  {CATEGORIES.find((cat) => cat.key === category)?.label ||
-                    "Pertanyaan Umum"}
+                <TableOfContents className="w-6 h-6 mr-3" style={{ color: "var(--color-greyLight-700)" }} />
+                <h2 className="text-2xl font-bold" style={{ color: "var(--color-greyDark-900)" }}>
+                  {CATEGORIES.find((cat) => cat.key === category)?.label || "Pertanyaan Umum"}
                 </h2>
               </div>
               {loading ? (
@@ -158,10 +135,7 @@ export default function FAQPage() {
                   value={cat.key}
                   className="text-sm whitespace-nowrap flex-shrink-0 px-4 cursor-pointer"
                   style={{
-                    color:
-                      category === cat.key
-                        ? "var(--color-red-600)"
-                        : "var(--color-greyLight-700)",
+                    color: category === cat.key ? "var(--color-red-600)" : "var(--color-greyLight-700)",
                   }}
                 >
                   {cat.label}
@@ -173,21 +147,13 @@ export default function FAQPage() {
               <TabsContent key={cat.key} value={cat.key}>
                 <div className="p-4">
                   <div className="flex items-center mb-6">
-                    <TableOfContents
-                      className="w-6 h-6 mr-3"
-                      style={{ color: "var(--color-greyLight-700)" }}
-                    />
-                    <h2
-                      className="text-xl font-bold"
-                      style={{ color: "var(--color-greyDark-900)" }}
-                    >
+                    <TableOfContents className="w-6 h-6 mr-3" style={{ color: "var(--color-greyLight-700)" }} />
+                    <h2 className="text-xl font-bold" style={{ color: "var(--color-greyDark-900)" }}>
                       {cat.label}
                     </h2>
                   </div>
                   {loading ? (
-                    <div style={{ color: "var(--color-greyLight-600)" }}>
-                      Loading...
-                    </div>
+                    <div style={{ color: "var(--color-greyLight-600)" }}>Loading...</div>
                   ) : (
                     <Accordion type="single" collapsible className="w-full">
                       {faqItems.map((item, index) => (
@@ -196,8 +162,7 @@ export default function FAQPage() {
                           value={`item-${index}`}
                           className="mb-4 overflow-hidden"
                           style={{
-                            borderBottom:
-                              "1px solid var(--color-greyLight-200)",
+                            borderBottom: "1px solid var(--color-greyLight-200)",
                           }}
                         >
                           <AccordionTrigger

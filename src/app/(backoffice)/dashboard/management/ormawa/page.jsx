@@ -8,221 +8,112 @@ import {
   useEditOrmawaMutation,
   useDeleteOrmawaMutation,
 } from "@/hooks/ormawa.hooks";
-import { useAuth } from "@/contexts/authContext"; // Tambahkan untuk akses user
-
-// UI Components (sama seperti sebelumnya)
-function Input(props) {
-  return <input className="border rounded px-2 py-1 w-full" {...props} />;
-}
-function Textarea(props) {
-  return <textarea className="border rounded px-2 py-1 w-full" {...props} />;
-}
-function Button({ children, variant, className = "", ...props }) {
-  const style =
-    variant === "outline"
-      ? "border px-3 py-1 rounded hover:bg-gray-100"
-      : "bg-primary text-white px-3 py-1 rounded hover:bg-primary-dark";
-  return (
-    <button className={style + " " + className} {...props}>
-      {children}
-    </button>
-  );
-}
-function Label({ children }) {
-  return <label className="block mb-1 font-medium">{children}</label>;
-}
-function Badge({ children, className = "" }) {
-  return (
-    <span
-      className={`inline-block px-2 py-0.5 rounded text-xs font-semibold ${className}`}
-    >
-      {children}
-    </span>
-  );
-}
-function Select({ value, onValueChange, children, ...props }) {
-  return (
-    <select
-      className="border rounded px-2 py-1"
-      value={value}
-      onChange={(e) => onValueChange(e.target.value)}
-      {...props}
-    >
-      {children}
-    </select>
-  );
-}
-function SelectItem({ value, children }) {
-  return <option value={value}>{children}</option>;
-}
-function Card({ children }) {
-  return <div className="bg-white rounded shadow border">{children}</div>;
-}
-function CardHeader({ children }) {
-  return <div className="p-4 border-b">{children}</div>;
-}
-function CardTitle({ children }) {
-  return <h2 className="text-lg font-bold">{children}</h2>;
-}
-function CardDescription({ children }) {
-  return <p className="text-gray-500">{children}</p>;
-}
-function CardContent({ children }) {
-  return <div className="p-4">{children}</div>;
-}
-function Dialog({ open, onOpenChange, children }) {
-  if (!open) return null;
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-      <div className="bg-white rounded shadow-lg p-6 min-w-[350px]">
-        {children}
-      </div>
-      <div
-        className="fixed inset-0"
-        onClick={() => onOpenChange(false)}
-        style={{ zIndex: -1 }}
-      />
-    </div>
-  );
-}
-function DialogTrigger({ asChild, children, onClick }) {
-  return (
-    <span onClick={onClick} style={{ display: "inline-block" }}>
-      {children}
-    </span>
-  );
-}
-function DialogContent({ children }) {
-  return <div>{children}</div>;
-}
-function DialogHeader({ children }) {
-  return <div className="mb-2">{children}</div>;
-}
-function DialogTitle({ children }) {
-  return <h2 className="text-xl font-bold">{children}</h2>;
-}
-function DialogDescription({ children }) {
-  return <p className="text-gray-500">{children}</p>;
-}
-function DialogFooter({ children }) {
-  return <div className="flex justify-end gap-2 mt-4">{children}</div>;
-}
-function AlertDialog({ open, onOpenChange, children }) {
-  if (!open) return null;
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-      <div className="bg-white rounded shadow-lg p-6 min-w-[350px]">
-        {children}
-      </div>
-      <div
-        className="fixed inset-0"
-        onClick={() => onOpenChange(false)}
-        style={{ zIndex: -1 }}
-      />
-    </div>
-  );
-}
-function AlertDialogContent({ children }) {
-  return <div>{children}</div>;
-}
-function AlertDialogHeader({ children }) {
-  return <div className="mb-2">{children}</div>;
-}
-function AlertDialogTitle({ children }) {
-  return <h2 className="text-lg font-bold">{children}</h2>;
-}
-function AlertDialogDescription({ children }) {
-  return <p className="text-gray-500">{children}</p>;
-}
-function AlertDialogFooter({ children }) {
-  return <div className="flex justify-end gap-2 mt-4">{children}</div>;
-}
-function AlertDialogCancel({ children, onClick }) {
-  return (
-    <Button variant="outline" onClick={onClick}>
-      {children}
-    </Button>
-  );
-}
-function AlertDialogAction({ children, onClick }) {
-  return <Button onClick={onClick}>{children}</Button>;
-}
+import { useAuth } from "@/contexts/authContext";
+import { DashboardHeader } from "@/components/_shared/header/DashboardHeader";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const LAB_TYPE_ENUM = ["PRAKTIKUM", "RESEARCH"];
+const CATEGORIES = ["LAB", "ORGANIZATION", "UKM", "COMMUNITY"];
+
 const CATEGORY_COLORS = {
   LAB: "bg-purple-100 text-purple-800",
   ORGANIZATION: "bg-pink-100 text-pink-800",
   UKM: "bg-green-100 text-green-800",
   COMMUNITY: "bg-blue-100 text-blue-800",
 };
+
 const LAB_TYPE_COLORS = {
   PRAKTIKUM: "bg-orange-100 text-orange-800",
   RESEARCH: "bg-yellow-100 text-yellow-800",
 };
 
+const INITIAL_FORM_DATA = {
+  ormawaName: "",
+  description: "",
+  content: "",
+  isOpenRegistration: false,
+  icon: "",
+  background: "",
+  category: "",
+  labType: "",
+  ukmCategory: "",
+};
+
 export default function OrmawaManagement() {
-  const { user } = useAuth(); // Ambil data user termasuk role dan id
+  const { user, checkUserLoggedIn } = useAuth();
   const { ormawaData, isLoading, refetch } = useGetAllOrmawa();
-  const addOrmawaMutation = useAddOrmawaMutation({ successAction: refetch });
+  const addOrmawaMutation = useAddOrmawaMutation({
+    successAction: () => {
+      refetch();
+      checkUserLoggedIn();
+    },
+  });
   const editOrmawaMutation = useEditOrmawaMutation({ successAction: refetch });
   const deleteOrmawaMutation = useDeleteOrmawaMutation({
-    successAction: refetch,
+    successAction: () => {
+      refetch();
+      checkUserLoggedIn();
+    },
   });
 
+  // State management
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingOrmawa, setEditingOrmawa] = useState(null);
-  const [formData, setFormData] = useState({
-    ormawaName: "",
-    description: "",
-    content: "",
-    isOpenRegistration: false,
-    icon: "",
-    background: "",
-    category: "",
-    labType: "",
-    ukmCategory: "",
-  });
+  const [formData, setFormData] = useState(INITIAL_FORM_DATA);
   const [fileIcon, setFileIcon] = useState(null);
   const [fileBg, setFileBg] = useState(null);
   const [iconPreview, setIconPreview] = useState("");
   const [bgPreview, setBgPreview] = useState("");
-  const iconInputRef = useRef();
-  const bgInputRef = useRef();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState(null);
 
-  const categories = ["LAB", "ORGANIZATION", "UKM", "COMMUNITY"];
+  // Refs
+  const iconInputRef = useRef();
+  const bgInputRef = useRef();
 
-  // Filter ormawa berdasarkan role
+  // Computed values
   const filteredOrmawas = (ormawaData || []).filter((o) => {
     const matchSearch =
       o.ormawaName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       o.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       o.content?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchCategory =
-      selectedCategory === "all" || o.category === selectedCategory;
-    const matchCreator =
-      user?.role === "ADMIN" || (user?.role === "ORGANIZER" && o.creatorId === user.id);
+    const matchCategory = selectedCategory === "all" || o.category === selectedCategory;
+    const matchCreator = user?.role === "ADMIN" || (user?.role === "ORGANIZER" && o.creatorId === user.id);
     return matchSearch && matchCategory && matchCreator;
   });
 
-  // Cek apakah ORGANIZER sudah memiliki ormawa
   const organizerOrmawaCount = ormawaData?.filter((o) => o.creatorId === user?.id).length || 0;
+  const canCreateOrmawa = user?.role === "ORGANIZER" && organizerOrmawaCount === 0;
 
+  // Utility functions
   const resetForm = () => {
-    setFormData({
-      ormawaName: "",
-      description: "",
-      content: "",
-      isOpenRegistration: false,
-      icon: "",
-      background: "",
-      category: "",
-      labType: "",
-      ukmCategory: "",
-    });
+    setFormData(INITIAL_FORM_DATA);
     setFileIcon(null);
     setFileBg(null);
     setIconPreview("");
@@ -232,25 +123,40 @@ export default function OrmawaManagement() {
     if (bgInputRef.current) bgInputRef.current.value = "";
   };
 
+  const handleFormChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  // File handling
+  const handleFileChange = (file, type) => {
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      if (type === "icon") {
+        setFileIcon(file);
+        setIconPreview(ev.target.result);
+      } else {
+        setFileBg(file);
+        setBgPreview(ev.target.result);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const payload = new FormData();
-    payload.append("ormawaName", formData.ormawaName || "");
-    payload.append("description", formData.description || "");
-    payload.append("content", formData.content || "");
-    payload.append(
-      "isOpenRegistration",
-      formData.isOpenRegistration ? "true" : "false"
-    );
-    payload.append("category", formData.category || "");
-
-    if (formData.category === "LAB" && formData.labType) {
-      payload.append("labType", formData.labType || "");
-    }
-
-    if (formData.category === "UKM" && formData.ukmCategory) {
-      payload.append("ukmCategory", formData.ukmCategory || "");
-    }
+    Object.entries(formData).forEach(([key, value]) => {
+      if (key === "icon" || key === "background") return;
+      if (key === "isOpenRegistration") {
+        payload.append(key, value ? "true" : "false");
+      } else if (value) {
+        payload.append(key, value);
+      }
+    });
 
     if (fileIcon instanceof File) {
       payload.append("icon", fileIcon);
@@ -260,37 +166,41 @@ export default function OrmawaManagement() {
       payload.append("background", fileBg);
     }
 
-    payload.append("creatorId", user?.id); // Tambahkan creatorId ke payload
-    console.log("Submitting payload:", payload);
+    payload.append("userId", user?.userId);
+
     if (editingOrmawa) {
       editOrmawaMutation.mutate({ id: editingOrmawa.id, payload });
     } else {
       addOrmawaMutation.mutate({ payload });
     }
+
     setIsDialogOpen(false);
     resetForm();
   };
 
-  const handleEdit = (o) => {
-    if (user?.role === "ORGANIZER" && o.creatorId !== user.id) {
+  // CRUD operations
+  const handleEdit = (ormawa) => {
+    if (user?.role === "ORGANIZER" && ormawa.creatorId !== user.id) {
       console.warn("⚠️ ORGANIZER hanya bisa edit ormawa milik sendiri");
       return;
     }
-    setEditingOrmawa(o);
+
+    setEditingOrmawa(ormawa);
     setFormData({
-      ormawaName: o.ormawaName || "",
-      description: o.description || "",
-      content: o.content || "",
-      isOpenRegistration: o.isOpenRegistration || false,
-      icon: o.icon || "",
-      background: o.background || "",
-      category: o.category || "",
-      labType: o.labType || "",
-      ukmCategory: o.ukmCategory || "",
+      ormawaName: ormawa.ormawaName || "",
+      description: ormawa.description || "",
+      content: ormawa.content || "",
+      isOpenRegistration: ormawa.isOpenRegistration || false,
+      icon: ormawa.icon || "",
+      background: ormawa.background || "",
+      category: ormawa.category || "",
+      labType: ormawa.labType || "",
+      ukmCategory: ormawa.ukmCategory || "",
     });
-    setIconPreview(o.icon || "");
-    setBgPreview(o.background || "");
+    setIconPreview(ormawa.icon || "");
+    setBgPreview(ormawa.background || "");
     setIsDialogOpen(true);
+
     if (iconInputRef.current) iconInputRef.current.value = "";
     if (bgInputRef.current) bgInputRef.current.value = "";
   };
@@ -311,398 +221,337 @@ export default function OrmawaManagement() {
     setPendingDeleteId(null);
   };
 
-  const showLabType = formData.category === "LAB";
-  const showUkmCategory = formData.category === "UKM";
-
-  const handleIconChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFileIcon(file);
-      const reader = new FileReader();
-      reader.onload = (ev) => setIconPreview(ev.target.result);
-      reader.readAsDataURL(file);
-    }
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+    resetForm();
   };
 
-  const handleBgChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFileBg(file);
-      const reader = new FileReader();
-      reader.onload = (ev) => setBgPreview(ev.target.result);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-lg">Loading...</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex flex-col space-y-4">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold">Ormawa Management</h1>
-            <p className="text-gray-500">Kelola data Ormawa</p>
-          </div>
-          {user?.role !== "ADMIN" && user?.role === "ORGANIZER" && organizerOrmawaCount === 0 && (
-            <DialogTrigger
-              onClick={() => {
-                resetForm();
-                setIsDialogOpen(true);
-              }}
-            >
-              <Button className="flex flex-col items-center bg-blue-600 hover:bg-blue-700">
-                <Plus className="w-6 h-6 mb-1" />
-                <span className="text-sm font-semibold">Tambah Ormawa</span>
-              </Button>
-            </DialogTrigger>
-          )}
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  {editingOrmawa ? "Edit Ormawa" : "Tambah Ormawa"}
-                </DialogTitle>
-                <DialogDescription>
-                  {editingOrmawa
-                    ? "Perbarui data Ormawa"
-                    : "Masukkan data Ormawa baru"}
-                </DialogDescription>
-              </DialogHeader>
-              <form className="space-y-0" onSubmit={handleSubmit}>
-                <div className="flex flex-wrap gap-4">
-                  <div className="flex-1 min-w-[200px]">
-                    <Label>Nama Ormawa</Label>
-                    <Input
-                      value={formData.ormawaName}
-                      onChange={(e) =>
-                        setFormData({ ...formData, ormawaName: e.target.value })
-                      }
-                      required
-                    />
-                  </div>
-                  <div className="flex-1 min-w-[200px]">
-                    <Label>Deskripsi</Label>
-                    <Input
-                      value={formData.description}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          description: e.target.value,
-                        })
-                      }
-                      required
-                    />
-                  </div>
-                  <div className="flex-1 min-w-[200px]">
-                    <Label>Icon</Label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      ref={iconInputRef}
-                      onChange={handleIconChange}
-                      className="block w-full text-sm text-gray-500
-                        file:mr-4 file:py-2 file:px-4
-                        file:rounded file:border-0
-                        file:text-sm file:font-semibold
-                        file:bg-blue-50 file:text-blue-700
-                        hover:file:bg-blue-100"
-                    />
-                    {iconPreview && (
-                      <img
-                        src={iconPreview}
-                        alt="Preview Icon"
-                        className="mt-2 w-12 h-12 object-contain border rounded"
-                      />
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-[200px]">
-                    <Label>Background</Label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      ref={bgInputRef}
-                      onChange={handleBgChange}
-                      className="block w-full text-sm text-gray-500
-                        file:mr-4 file:py-2 file:px-4
-                        file:rounded file:border-0
-                        file:text-sm file:font-semibold
-                        file:bg-blue-50 file:text-blue-700
-                        hover:file:bg-blue-100"
-                    />
-                    {bgPreview && (
-                      <img
-                        src={bgPreview}
-                        alt="Preview Background"
-                        className="mt-2 w-12 h-12 object-contain border rounded"
-                      />
-                    )}
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-4 mt-4">
-                  <div className="flex-1 min-w-[200px]">
-                    <Label>Kategori</Label>
-                    <Select
-                      value={formData.category}
-                      onValueChange={(v) =>
-                        setFormData({
-                          ...formData,
-                          category: v,
-                          labType: "",
-                          ukmCategory: "",
-                        })
-                      }
-                      required
-                    >
-                      <SelectItem value="">Pilih kategori</SelectItem>
-                      {categories.map((c) => (
-                        <SelectItem key={c} value={c}>
-                          {c}
-                        </SelectItem>
-                      ))}
-                    </Select>
-                  </div>
-                  {showLabType && (
-                    <div className="flex-1 min-w-[200px]">
-                      <Label>Lab Type</Label>
-                      <Select
-                        value={formData.labType}
-                        onValueChange={(v) =>
-                          setFormData({ ...formData, labType: v })
-                        }
-                        required
-                      >
-                        <SelectItem value="">Pilih tipe lab</SelectItem>
-                        {LAB_TYPE_ENUM.map((c) => (
-                          <SelectItem key={c} value={c}>
-                            {c}
-                          </SelectItem>
-                        ))}
-                      </Select>
-                    </div>
-                  )}
-                  {showUkmCategory && (
-                    <div className="flex-1 min-w-[200px]">
-                      <Label>UKM Category</Label>
-                      <Input
-                        value={formData.ukmCategory}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            ukmCategory: e.target.value,
-                          })
-                        }
-                        placeholder="Isi kategori UKM jika ada"
-                      />
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-[200px]">
-                    <Label>Buka Pendaftaran</Label>
-                    <Select
-                      value={formData.isOpenRegistration ? "true" : "false"}
-                      onValueChange={(v) =>
-                        setFormData({
-                          ...formData,
-                          isOpenRegistration: v === "true",
-                        })
-                      }
-                    >
-                      <SelectItem value="true">Dibuka</SelectItem>
-                      <SelectItem value="false">Ditutup</SelectItem>
-                    </Select>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <Label>Konten</Label>
-                  <Textarea
-                    value={formData.content}
-                    onChange={(e) =>
-                      setFormData({ ...formData, content: e.target.value })
-                    }
-                    rows={3}
-                    required
-                  />
-                </div>
-                <DialogFooter>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      setIsDialogOpen(false);
-                      resetForm();
-                    }}
-                  >
-                    Batal
-                  </Button>
-                  <Button
-                    type="submit"
-                    className="bg-blue-600 hover:bg-blue-700"
-                  >
-                    {editingOrmawa ? "Update" : "Simpan"}
-                  </Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </div>
-
-        <Card>
+    <>
+      <DashboardHeader title="Manajemen Ormawa" />
+      <main className="md:p-5 p-3 bg-[#FCFCFC] min-h-screen md:space-y-5 space-y-3">
+        {/* Filter & Search Section */}
+        <Card className="w-full gap-3">
           <CardHeader>
-            <CardTitle>Filter & Pencarian</CardTitle>
-            <CardDescription>
-              Cari dan filter Ormawa berdasarkan kategori
-            </CardDescription>
+            <div className="flex justify-between items-center">
+              <div>
+                <CardTitle className="text-xl font-bold">Filter & Pencarian</CardTitle>
+                <CardDescription>Cari dan filter Ormawa berdasarkan kategori</CardDescription>
+              </div>
+              {canCreateOrmawa && (
+                <Button
+                  onClick={() => {
+                    resetForm();
+                    setIsDialogOpen(true);
+                  }}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
+                  Tambah Ormawa
+                </Button>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex-1">
+            <div className="grid grid-cols-8 gap-4">
+              <div className="col-span-6">
                 <div className="relative">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
                     placeholder="Cari nama, deskripsi, atau konten..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{ paddingLeft: 32 }}
+                    className="pl-10"
                   />
                 </div>
               </div>
-              <div className="sm:w-48">
-                <Select
-                  value={selectedCategory}
-                  onValueChange={setSelectedCategory}
-                >
-                  <SelectItem value="all">Semua Kategori</SelectItem>
-                  {categories.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {c}
+              <div className="col-span-2">
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Pilih kategori" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem className="w-full" value="all">
+                      Semua Kategori
                     </SelectItem>
-                  ))}
+                    {CATEGORIES.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
               </div>
             </div>
           </CardContent>
         </Card>
 
+        {/* Ormawa Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredOrmawas.length === 0 && (
-            <div className="col-span-full text-center text-gray-400 py-8">
-              Tidak ada data Ormawa
+          {filteredOrmawas.length === 0 ? (
+            <div className="col-span-full text-center text-gray-500 py-12">
+              <div className="text-lg font-medium">Tidak ada data Ormawa</div>
+              <div className="text-sm">Coba ubah filter atau tambah Ormawa baru</div>
             </div>
-          )}
-          {filteredOrmawas.map((o) => (
-            <Card key={o.id}>
-              <div className="flex justify-between items-start p-4 border-b">
-                <div>
-                  <div className="font-bold text-lg">{o.ormawaName}</div>
-                  <Badge
-                    className={
-                      CATEGORY_COLORS[o.category] || "bg-gray-100 text-gray-800"
-                    }
-                  >
-                    {o.category}
-                  </Badge>
-                  {o.labType && o.category === "LAB" && (
-                    <span className="ml-2">
+          ) : (
+            filteredOrmawas.map((ormawa, index) => (
+              <Card key={index} className="hover:shadow-md transition-shadow gap-0">
+                <CardHeader className="pb-3">
+                  <div className="flex justify-between items-start">
+                    <div className="space-y-2">
+                      <CardTitle className="text-lg">{ormawa.ormawaName}</CardTitle>
+                      <div className="flex flex-wrap gap-1">
+                        <Badge className={CATEGORY_COLORS[ormawa.category] || "bg-gray-100 text-gray-800"}>
+                          {ormawa.category}
+                        </Badge>
+                        {ormawa.labType && ormawa.category === "LAB" && (
+                          <Badge className={LAB_TYPE_COLORS[ormawa.labType] || "bg-gray-100 text-gray-800"}>
+                            {ormawa.labType}
+                          </Badge>
+                        )}
+                        {ormawa.ukmCategory && ormawa.category === "UKM" && (
+                          <Badge className="bg-blue-100 text-blue-800">{ormawa.ukmCategory}</Badge>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex gap-1">
+                      <Button size="sm" variant="outline" onClick={() => handleEdit(ormawa)} className="h-8 w-8 p-0">
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDelete(ormawa.id)}
+                        className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <p className="text-gray-700 text-sm">{ormawa.description}</p>
+
+                  <div className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-1">
+                      <span>Pendaftaran:</span>
                       <Badge
+                        variant={ormawa.isOpenRegistration ? "default" : "secondary"}
                         className={
-                          LAB_TYPE_COLORS[o.labType] ||
-                          "bg-gray-100 text-gray-800"
+                          ormawa.isOpenRegistration ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
                         }
                       >
-                        {o.labType}
+                        {ormawa.isOpenRegistration ? "Dibuka" : "Ditutup"}
                       </Badge>
-                    </span>
-                  )}
-                  {o.ukmCategory && o.category === "UKM" && (
-                    <span className="ml-2">
-                      <Badge className="bg-blue-100 text-blue-800">
-                        {o.ukmCategory}
-                      </Badge>
-                    </span>
-                  )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </div>
+
+        {/* Add/Edit Dialog */}
+        <Dialog open={isDialogOpen} onOpenChange={handleDialogClose}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{editingOrmawa ? "Edit Ormawa" : "Tambah Ormawa"}</DialogTitle>
+              <DialogDescription>
+                {editingOrmawa ? "Perbarui data Ormawa" : "Masukkan data Ormawa baru"}
+              </DialogDescription>
+            </DialogHeader>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Basic Information */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="ormawaName">Nama Ormawa *</Label>
+                  <Input
+                    id="ormawaName"
+                    value={formData.ormawaName}
+                    onChange={(e) => handleFormChange("ormawaName", e.target.value)}
+                    required
+                  />
                 </div>
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleEdit(o)}
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleDelete(o.id)}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                <div className="space-y-2">
+                  <Label htmlFor="description">Deskripsi *</Label>
+                  <Input
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => handleFormChange("description", e.target.value)}
+                    required
+                  />
                 </div>
               </div>
-              <CardContent>
-                <div className="mb-2 text-gray-700">{o.description}</div>
-                <div className="mb-2 text-sm text-gray-500 whitespace-pre-line">
-                  {o.content}
-                </div>
-                <div className="mb-2 text-xs flex items-center gap-2">
-                  <span className="font-semibold">Icon:</span>
-                  {o.icon ? (
-                    <img
-                      src={o.icon}
-                      alt="icon"
-                      className="w-8 h-8 object-contain border rounded"
-                    />
-                  ) : (
-                    <span className="italic text-gray-400">Tidak ada icon</span>
-                  )}
-                </div>
-                <div className="mb-2 text-xs flex items-center gap-2">
-                  <span className="font-semibold">Background:</span>
-                  {o.background ? (
-                    <img
-                      src={o.background}
-                      alt="background"
-                      className="w-8 h-8 object-contain border rounded"
-                    />
-                  ) : (
-                    <span className="italic text-gray-400">
-                      Tidak ada background
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center gap-2 text-xs">
-                  <span>Pendaftaran:</span>
-                  <span
-                    className={
-                      o.isOpenRegistration ? "text-green-600" : "text-red-600"
-                    }
-                  >
-                    {o.isOpenRegistration ? "Dibuka" : "Ditutup"}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
 
-      {/* AlertDialog untuk hapus */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Hapus Ormawa</AlertDialogTitle>
-            <AlertDialogDescription>
-              Apakah Anda yakin ingin menghapus data Ormawa ini? Tindakan ini
-              tidak dapat dibatalkan.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setDeleteDialogOpen(false)}>
-              Batal
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete}>Hapus</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+              {/* Category and Type */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Kategori *</Label>
+                  <Select
+                    value={formData.category}
+                    onValueChange={(value) => handleFormChange("category", value)}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pilih kategori" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CATEGORIES.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Status Pendaftaran</Label>
+                  <Select
+                    value={formData.isOpenRegistration ? "true" : "false"}
+                    onValueChange={(value) => handleFormChange("isOpenRegistration", value === "true")}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="true">Dibuka</SelectItem>
+                      <SelectItem value="false">Ditutup</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="w-full gap-4">
+                {formData.category === "LAB" && (
+                  <div className="space-y-2 w-full">
+                    <Label>Tipe Lab *</Label>
+                    <Select
+                      value={formData.labType}
+                      onValueChange={(value) => handleFormChange("labType", value)}
+                      required
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Pilih tipe lab" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {LAB_TYPE_ENUM.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                {formData.category === "UKM" && (
+                  <div className="space-y-2 w-full">
+                    <Label>Kategori UKM</Label>
+                    <Input
+                      value={formData.ukmCategory}
+                      onChange={(e) => handleFormChange("ukmCategory", e.target.value)}
+                      placeholder="Isi kategori UKM"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* File Uploads */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Icon</Label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={iconInputRef}
+                    onChange={(e) => handleFileChange(e.target.files[0], "icon")}
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  />
+                  {iconPreview && (
+                    <img
+                      src={
+                        fileIcon
+                          ? iconPreview
+                          : `${process.env.NEXT_PUBLIC_API_BASE_URL}${iconPreview}` || "/placeholder.svg"
+                      }
+                      alt="Preview Icon"
+                      className="mt-2 w-16 h-16 object-contain border rounded"
+                    />
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label>Background</Label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={bgInputRef}
+                    onChange={(e) => handleFileChange(e.target.files[0], "background")}
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  />
+                  {bgPreview && (
+                    <img
+                      src={
+                        fileBg ? bgPreview : `${process.env.NEXT_PUBLIC_API_BASE_URL}${bgPreview}` || "/placeholder.svg"
+                      }
+                      alt="Preview Background"
+                      className="mt-2 w-16 h-16 object-contain border rounded"
+                    />
+                  )}
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="space-y-2">
+                <Label htmlFor="content">Konten *</Label>
+                <Textarea
+                  id="content"
+                  value={formData.content}
+                  onChange={(e) => handleFormChange("content", e.target.value)}
+                  rows={4}
+                  required
+                />
+              </div>
+
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={handleDialogClose} className="cursor-pointer">
+                  Batal
+                </Button>
+                <Button variant={"default"} type="submit" className="cursor-pointer">
+                  {editingOrmawa ? "Update" : "Simpan"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Hapus Ormawa</AlertDialogTitle>
+              <AlertDialogDescription>
+                Apakah Anda yakin ingin menghapus data Ormawa ini? Tindakan ini tidak dapat dibatalkan.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Batal</AlertDialogCancel>
+              <AlertDialogAction onClick={confirmDelete} className="bg-red-600 hover:bg-red-700">
+                Hapus
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </main>
+    </>
   );
 }

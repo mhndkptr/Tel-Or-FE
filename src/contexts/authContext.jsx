@@ -77,7 +77,8 @@ export const AuthProvider = ({ children }) => {
         return {
           success: false,
           statusCode: error.response?.status || 500,
-          message: error.response?.data?.message || "An unexpected error occurred",
+          message:
+            error.response?.data?.error?.message || error.response?.data?.message || "An unexpected error occurred",
         };
       } else {
         console.error("Login error:", error);
