@@ -105,11 +105,11 @@ export default function OrmawaManagement() {
       o.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       o.content?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchCategory = selectedCategory === "all" || o.category === selectedCategory;
-    const matchCreator = user?.role === "ADMIN" || (user?.role === "ORGANIZER" && o.creatorId === user.id);
+    const matchCreator = user?.role === "ADMIN" || (user?.role === "ORGANIZER" && o?.user?.userId === user.id);
     return matchSearch && matchCategory && matchCreator;
   });
 
-  const organizerOrmawaCount = ormawaData?.filter((o) => o.creatorId === user?.id).length || 0;
+  const organizerOrmawaCount = ormawaData?.filter((o) => o?.user?.userId === user?.id).length || 0;
   const canCreateOrmawa = user?.role === "ORGANIZER" && organizerOrmawaCount === 0;
 
   // Utility functions
@@ -181,7 +181,7 @@ export default function OrmawaManagement() {
 
   // CRUD operations
   const handleEdit = (ormawa) => {
-    if (user?.role === "ORGANIZER" && ormawa.creatorId !== user.id) {
+    if (user?.role === "ORGANIZER" && ormawa?.user?.userId !== user.id) {
       console.warn("⚠️ ORGANIZER hanya bisa edit ormawa milik sendiri");
       return;
     }
@@ -208,7 +208,7 @@ export default function OrmawaManagement() {
 
   const handleDelete = (id) => {
     const ormawaToDelete = ormawaData.find((o) => o.id === id);
-    if (user?.role === "ORGANIZER" && ormawaToDelete?.creatorId !== user.id) {
+    if (user?.role === "ORGANIZER" && ormawaToDelete?.user?.userId !== user.id) {
       console.warn("⚠️ ORGANIZER hanya bisa hapus ormawa milik sendiri");
       return;
     }
