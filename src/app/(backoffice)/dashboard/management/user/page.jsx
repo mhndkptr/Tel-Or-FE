@@ -19,6 +19,7 @@ import { UserDialog } from "@/components/core/user-dialog";
 import { DeleteUserDialog } from "@/components/core/delete-user-dialog";
 import { useGetAllUsers, useAddUserMutation, useEditUserMutation, useDeleteUserMutation } from "@/hooks/user.hooks";
 import { DashboardHeader } from "@/components/_shared/header/DashboardHeader";
+import { ROLE } from "@/utils/constants";
 
 export default function UsersPage() {
   const { users, isLoading, refetch } = useGetAllUsers();
@@ -147,15 +148,17 @@ export default function UsersPage() {
                             >
                               <Pencil className="mr-2 h-4 w-4" /> Edit
                             </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="text-destructive"
-                              onClick={() => {
-                                setSelectedUser(user);
-                                setIsDeleteDialogOpen(true);
-                              }}
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" /> Delete
-                            </DropdownMenuItem>
+                            {user.role !== ROLE.ADMIN && (
+                              <DropdownMenuItem
+                                className="text-destructive"
+                                onClick={() => {
+                                  setSelectedUser(user);
+                                  setIsDeleteDialogOpen(true);
+                                }}
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" /> Delete
+                              </DropdownMenuItem>
+                            )}
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>

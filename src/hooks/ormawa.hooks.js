@@ -7,12 +7,7 @@ import { Bounce } from "react-toastify";
 
 // Helper to display toast
 function showToast(type, title, description = "") {
-  const fn =
-    type === "success"
-      ? toast.success
-      : type === "warn"
-      ? toast.warn
-      : toast.error;
+  const fn = type === "success" ? toast.success : type === "warn" ? toast.warn : toast.error;
   fn(<ToastContent title={title} description={description} />, {
     position: "top-right",
     autoClose: 3000,
@@ -45,11 +40,7 @@ export function useGetAllOrmawa() {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     onError: (error) => {
-      showToast(
-        "error",
-        "Terjadi kesalahan!",
-        error?.message || "Unknown error"
-      );
+      showToast("error", "Terjadi kesalahan!", error?.message || "Unknown error");
     },
   });
 
@@ -80,11 +71,7 @@ export function useGetOrmawaById(ormawaId) {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     onError: (error) => {
-      showToast(
-        "error",
-        "Terjadi kesalahan!",
-        error?.message || "Unknown error"
-      );
+      showToast("error", "Terjadi kesalahan!", error?.message || "Unknown error");
     },
   });
 
@@ -115,19 +102,11 @@ export function useAddOrmawaMutation({ successAction }) {
         showToast("success", "Ormawa berhasil ditambahkan!");
         successAction?.();
       } else {
-        showToast(
-          "warn",
-          "Ormawa gagal ditambahkan!",
-          `${data?.code || ""}: ${data?.message || ""}`
-        );
+        showToast("warn", "Ormawa gagal ditambahkan!", `${data?.code || ""}: ${data?.message || ""}`);
       }
     },
     onError: (error) => {
-      showToast(
-        "error",
-        "Terjadi kesalahan!",
-        error?.message || "Unknown error"
-      );
+      showToast("error", "Terjadi kesalahan!", error?.message || "Unknown error");
     },
   });
 }
@@ -146,19 +125,11 @@ export function useEditOrmawaMutation({ successAction }) {
         showToast("success", "Ormawa berhasil diperbarui!");
         successAction?.();
       } else {
-        showToast(
-          "warn",
-          "Ormawa gagal diperbarui!",
-          `${data?.code || ""}: ${data?.message || ""}`
-        );
+        showToast("warn", "Ormawa gagal diperbarui!", `${data?.code || ""}: ${data?.message || ""}`);
       }
     },
     onError: (error) => {
-      showToast(
-        "error",
-        "Terjadi kesalahan!",
-        error?.message || "Unknown error"
-      );
+      showToast("error", "Terjadi kesalahan!", error?.message || "Unknown error");
     },
   });
 }
@@ -176,19 +147,11 @@ export function useDeleteOrmawaMutation({ successAction }) {
         showToast("success", "Ormawa berhasil dihapus!");
         successAction?.();
       } else {
-        showToast(
-          "warn",
-          "Ormawa gagal dihapus!",
-          `${data?.code || ""}: ${data?.message || ""}`
-        );
+        showToast("warn", "Ormawa gagal dihapus!", `${data?.code || ""}: ${data?.message || ""}`);
       }
     },
     onError: (error) => {
-      showToast(
-        "error",
-        "Terjadi kesalahan!",
-        error?.message || "Unknown error"
-      );
+      showToast("error", "Terjadi kesalahan!", error?.message || "Unknown error");
     },
   });
 }

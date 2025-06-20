@@ -23,6 +23,7 @@ import { useGetAllOrmawa } from "@/hooks/ormawa.hooks";
 
 import { useGetAllEvent, useAddEventMutation, useEditEventMutation, useDeleteEventMutation } from "@/hooks/event.hooks";
 import { useAuth } from "@/contexts/authContext";
+import { ROLE } from "@/utils/constants";
 
 export default function EventManagement() {
   const { user } = useAuth();
@@ -67,8 +68,8 @@ export default function EventManagement() {
   };
 
   const handleSubmit = (data) => {
-    if (!data.ormawaId || data.ormawaId === "undefined" || data.ormawaId === "") {
-      alert("Ormawa ID tidak valid. Pilih Ormawa dengan benar.");
+    if (!user?.ormawa?.id || user?.ormawa?.id === "undefined" || user?.ormawa?.id === "") {
+      alert("Ormawa ID tidak valid");
       return;
     }
     const payload = new FormData();
@@ -85,8 +86,7 @@ export default function EventManagement() {
     if (data.photoFile) {
       payload.append("image", data.photoFile);
     }
-    payload.append("ormawaId", String(data.ormawaId));
-    console.log("👉 Payload entries:", [...payload.entries()]);
+    payload.append("ormawaId", user?.ormawa?.id);
     if (editingEvent) {
       payload.append("eventId", editingEvent.eventId);
       editEventMutation.mutate({ payload });
@@ -160,8 +160,8 @@ export default function EventManagement() {
       event.description?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const ormawaMatch =
-      !user?.role === "ORGANIZER" ||
-      (user?.role === "ORGANIZER" && user?.ormawa?.id && event.ormawaId === user?.ormawa?.id);
+      user?.role === ROLE.ADMIN ||
+      (user?.role === ROLE.ORGANIZER && user?.ormawa?.id && event.ormawaId === user?.ormawa?.id);
 
     return eventTypeMatch && searchMatch && ormawaMatch;
   });
@@ -193,7 +193,7 @@ export default function EventManagement() {
             <DialogTrigger asChild>
               <Button
                 onClick={() => setEditingEvent(null)}
-                disabled={user?.role === "ORGANIZER" && (!user.ormawaId || user.ormawaId === "undefined")}
+                disabled={user?.role === "ORGANIZER" && (!user?.ormawa || user?.ormawa?.id === "undefined")}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Tambah Event

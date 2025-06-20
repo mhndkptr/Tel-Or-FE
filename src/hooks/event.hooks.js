@@ -2,7 +2,7 @@ import ToastContent from "@/components/_shared/toast/ToastContent";
 import { fetch } from "@/utils/baseFetch";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 
 export function useGetAllEvent() {
   const { data, isLoading, isPending, refetch } = useQuery({
@@ -22,23 +22,17 @@ export function useGetAllEvent() {
     refetchOnMount: false, // Tidak refetch saat komponen di-mount ulang
     refetchOnWindowFocus: false, // Tidak refetch saat fokus kembali ke tab
     onError: (error) => {
-      toast.error(
-        <ToastContent
-          title={"Terjadi kesalahan!"}
-          description={error?.message}
-        />,
-        {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-        }
-      );
+      toast.error(<ToastContent title={"Terjadi kesalahan!"} description={error?.message} />, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     },
   });
 
@@ -73,23 +67,17 @@ export function useGetEventById(eventId) {
     refetchOnMount: false, // Tidak refetch saat komponen di-mount ulang
     refetchOnWindowFocus: false, // Tidak refetch saat fokus kembali ke tab
     onError: (error) => {
-      toast.error(
-        <ToastContent
-          title={"Terjadi kesalahan!"}
-          description={error?.message}
-        />,
-        {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-        }
-      );
+      toast.error(<ToastContent title={"Terjadi kesalahan!"} description={error?.message} />, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     },
   });
 
@@ -132,10 +120,7 @@ export function useAddEventMutation({ successAction }) {
         });
       } else {
         toast.warn(
-          <ToastContent
-            title={"Event gagal ditambahkan!"}
-            description={`${data?.code}: ${data?.message}`}
-          />,
+          <ToastContent title={"Event gagal ditambahkan!"} description={`${data?.code}: ${data?.message}`} />,
           {
             position: "top-right",
             autoClose: 3000,
@@ -151,23 +136,17 @@ export function useAddEventMutation({ successAction }) {
       }
     },
     onError: (error) => {
-      toast.error(
-        <ToastContent
-          title={"Terjadi kesalahan!"}
-          description={error?.message}
-        />,
-        {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-        }
-      );
+      toast.error(<ToastContent title={"Terjadi kesalahan!"} description={error?.message} />, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     },
   });
 
@@ -200,32 +179,7 @@ export function useEditEventMutation({ successAction }) {
           transition: Bounce,
         });
       } else {
-        toast.warn(
-          <ToastContent
-            title={"Event gagal diperbarui!"}
-            description={`${data?.code}: ${data?.message}`}
-          />,
-          {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Bounce,
-          }
-        );
-      }
-    },
-    onError: (error) => {
-      toast.error(
-        <ToastContent
-          title={"Terjadi kesalahan!"}
-          description={error?.message}
-        />,
-        {
+        toast.warn(<ToastContent title={"Event gagal diperbarui!"} description={`${data?.code}: ${data?.message}`} />, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -235,8 +189,21 @@ export function useEditEventMutation({ successAction }) {
           progress: undefined,
           theme: "light",
           transition: Bounce,
-        }
-      );
+        });
+      }
+    },
+    onError: (error) => {
+      toast.error(<ToastContent title={"Terjadi kesalahan!"} description={error?.message} />, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     },
   });
 
@@ -268,32 +235,7 @@ export function useDeleteEventMutation({ successAction }) {
           transition: Bounce,
         });
       } else {
-        toast.warn(
-          <ToastContent
-            title={"Event gagal dihapus!"}
-            description={`${data?.code}: ${data?.message}`}
-          />,
-          {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Bounce,
-          }
-        );
-      }
-    },
-    onError: (error) => {
-      toast.error(
-        <ToastContent
-          title={"Terjadi kesalahan!"}
-          description={error?.message}
-        />,
-        {
+        toast.warn(<ToastContent title={"Event gagal dihapus!"} description={`${data?.code}: ${data?.message}`} />, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -303,8 +245,21 @@ export function useDeleteEventMutation({ successAction }) {
           progress: undefined,
           theme: "light",
           transition: Bounce,
-        }
-      );
+        });
+      }
+    },
+    onError: (error) => {
+      toast.error(<ToastContent title={"Terjadi kesalahan!"} description={error?.message} />, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     },
   });
 

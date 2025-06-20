@@ -105,13 +105,6 @@ export function DashboardSidebar() {
           },
         ],
       },
-      {
-        type: "single",
-        name: "Setting",
-        href: "/dashboard/setting",
-        icon: Settings,
-        isActive: pathname === "/dashboard/setting",
-      },
     ];
 
   if (role === ROLE.ORGANIZER)
@@ -142,13 +135,6 @@ export function DashboardSidebar() {
             isActive: pathname.startsWith("/dashboard/management/event"),
           },
         ],
-      },
-      {
-        type: "single",
-        name: "Setting",
-        href: "/dashboard/setting",
-        icon: Settings,
-        isActive: pathname === "/dashboard/setting",
       },
     ];
 
