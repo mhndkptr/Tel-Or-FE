@@ -22,7 +22,7 @@ export default function DashboardOverviewPage() {
 
         {/* Features Section */}
         <section className="grid md:grid-cols-2 grid-cols-1 gap-4">
-          {user.role === ROLE.ADMIN && (
+          {user?.role === ROLE.ADMIN && (
             <div className="bg-white rounded-2xl shadow-sm p-5 hover:shadow-md transition">
               <h3 className="text-lg font-semibold text-gray-800 mb-1">Manajemen Pengguna</h3>
               <p className="text-sm text-gray-600">
