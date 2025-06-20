@@ -31,7 +31,7 @@ export function useLoginMutation() {
           transition: Bounce,
         });
       } else {
-        toast.warn(<ToastContent title={"Login gagal!"} description={`${data?.code}: ${data?.message}`} />, {
+        toast.warn(<ToastContent title={"Login gagal!"} description={`${data?.message}`} />, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,

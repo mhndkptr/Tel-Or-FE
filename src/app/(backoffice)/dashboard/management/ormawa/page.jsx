@@ -109,7 +109,7 @@ export default function OrmawaManagement() {
   });
 
   const organizerOrmawaCount = ormawaData?.filter((o) => o.creatorId === user?.id).length || 0;
-  const canCreateOrmawa = user?.role === "ADMIN" || (user?.role === "ORGANIZER" && organizerOrmawaCount === 0);
+  const canCreateOrmawa = user?.role === "ORGANIZER" && organizerOrmawaCount === 0;
 
   // Utility functions
   const resetForm = () => {
@@ -177,8 +177,6 @@ export default function OrmawaManagement() {
     setIsDialogOpen(false);
     resetForm();
   };
-
-  console.log("Ormawa Data:", ormawaData);
 
   // CRUD operations
   const handleEdit = (ormawa) => {

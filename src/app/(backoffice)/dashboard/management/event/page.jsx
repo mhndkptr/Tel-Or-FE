@@ -160,14 +160,15 @@ export default function EventManagement() {
       event.description?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const ormawaMatch =
-      !user?.role === "ORGANIZER" || (user?.role === "ORGANIZER" && user.ormawaId && event.ormawaId === user.ormawaId);
+      !user?.role === "ORGANIZER" ||
+      (user?.role === "ORGANIZER" && user?.ormawa?.id && event.ormawaId === user?.ormawa?.id);
 
     return eventTypeMatch && searchMatch && ormawaMatch;
   });
 
   const { ormawaData, isLoading: isLoadingOrmawa } = useGetAllOrmawa();
 
-  if (user?.role === "ORGANIZER" && (!user.ormawaId || user.ormawaId === "undefined")) {
+  if (user?.role === "ORGANIZER" && (!user?.ormawa || user?.ormawa?.id === "undefined")) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
         <div className="bg-red-50 border border-red-300 rounded-lg shadow-md p-6">
