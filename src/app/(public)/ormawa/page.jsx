@@ -111,11 +111,6 @@ export default function Home() {
               {/* Description */}
               <p className="text-gray-600 text-sm text-center mb-4 leading-relaxed">{ormawa.description}</p>
 
-              {/* Content (optional, if available) */}
-              {ormawa.content && (
-                <div className="text-xs text-gray-500 text-center mb-4 line-clamp-3">{ormawa.content}</div>
-              )}
-
               {/* Background image preview (optional) */}
               {ormawa.backgroundUrl && (
                 <div className="mb-4 flex justify-center">

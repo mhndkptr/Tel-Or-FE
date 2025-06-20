@@ -6,15 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import {
-  ArrowLeft,
-  Building2,
-  FileText,
-  ImageIcon,
-  Calendar,
-  CheckCircle,
-  XCircle,
-} from "lucide-react";
+import { ArrowLeft, Building2, FileText, ImageIcon, Calendar, CheckCircle, XCircle } from "lucide-react";
 
 const CATEGORY_COLORS = {
   LAB: "bg-purple-100 text-purple-800 border-purple-200",
@@ -52,16 +44,9 @@ export default function OrmawaDetailPage() {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="text-6xl mb-4">😕</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            Data Tidak Ditemukan
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Ormawa yang Anda cari tidak dapat ditemukan.
-          </p>
-          <Button
-            onClick={() => router.push("/ormawa")}
-            className="bg-blue-600 hover:bg-blue-700"
-          >
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Data Tidak Ditemukan</h2>
+          <p className="text-gray-600 mb-6">Ormawa yang Anda cari tidak dapat ditemukan.</p>
+          <Button onClick={() => router.push("/ormawa")} className="bg-blue-600 hover:bg-blue-700">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Kembali ke Daftar
           </Button>
@@ -103,16 +88,13 @@ export default function OrmawaDetailPage() {
               <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
               <div className="relative flex items-start justify-between">
                 <div className="flex-1">
-                  <h1 className="text-3xl md:text-4xl font-bold mb-4">
-                    {ormawaData.ormawaName}
-                  </h1>
+                  <h1 className="text-3xl md:text-4xl font-bold mb-4">{ormawaData.ormawaName}</h1>
 
                   {/* Badges */}
                   <div className="flex flex-wrap gap-3 mb-4">
                     <Badge
                       className={`${
-                        CATEGORY_COLORS[ormawaData.category] ||
-                        "bg-gray-100 text-gray-800 border-gray-200"
+                        CATEGORY_COLORS[ormawaData.category] || "bg-gray-100 text-gray-800 border-gray-200"
                       } px-3 py-1 text-sm font-semibold`}
                     >
                       <Building2 className="w-3 h-3 mr-1" />
@@ -122,20 +104,18 @@ export default function OrmawaDetailPage() {
                     {ormawaData.labType && ormawaData.category === "LAB" && (
                       <Badge
                         className={`${
-                          LAB_TYPE_COLORS[ormawaData.labType] ||
-                          "bg-gray-100 text-gray-800 border-gray-200"
+                          LAB_TYPE_COLORS[ormawaData.labType] || "bg-gray-100 text-gray-800 border-gray-200"
                         } px-3 py-1 text-sm font-semibold`}
                       >
                         {ormawaData.labType}
                       </Badge>
                     )}
 
-                    {ormawaData.ukmCategory &&
-                      ormawaData.category === "UKM" && (
-                        <Badge className="bg-blue-100 text-blue-800 border-blue-200 px-3 py-1 text-sm font-semibold">
-                          {ormawaData.ukmCategory}
-                        </Badge>
-                      )}
+                    {ormawaData.ukmCategory && ormawaData.category === "UKM" && (
+                      <Badge className="bg-blue-100 text-blue-800 border-blue-200 px-3 py-1 text-sm font-semibold">
+                        {ormawaData.ukmCategory}
+                      </Badge>
+                    )}
                   </div>
 
                   {/* Registration Status */}
@@ -143,16 +123,12 @@ export default function OrmawaDetailPage() {
                     {ormawaData.isOpenRegistration ? (
                       <>
                         <CheckCircle className="w-5 h-5 text-green-400" />
-                        <span className="text-green-300 font-medium">
-                          Pendaftaran Dibuka
-                        </span>
+                        <span className="text-green-300 font-medium">Pendaftaran Dibuka</span>
                       </>
                     ) : (
                       <>
                         <XCircle className="w-5 h-5 text-red-400" />
-                        <span className="text-red-200 font-medium">
-                          Pendaftaran Ditutup
-                        </span>
+                        <span className="text-red-200 font-medium">Pendaftaran Ditutup</span>
                       </>
                     )}
                   </div>
@@ -165,106 +141,29 @@ export default function OrmawaDetailPage() {
               <div className="mb-8">
                 <div className="flex items-center gap-2 mb-4">
                   <FileText className="w-5 h-5 text-blue-600" />
-                  <h2 className="text-xl font-semibold text-gray-800">
-                    Deskripsi
-                  </h2>
+                  <h2 className="text-xl font-semibold text-gray-800">Deskripsi</h2>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-6">
-                  <p className="text-gray-700 leading-relaxed text-lg">
-                    {ormawaData.description}
-                  </p>
+                  <p className="text-gray-700 leading-relaxed text-lg">{ormawaData.description}</p>
                 </div>
               </div>
 
               {/* Content Section */}
               <div className="mb-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <Calendar className="w-5 h-5 text-green-600" />
-                  <h2 className="text-xl font-semibold text-gray-800">
-                    Konten
-                  </h2>
-                </div>
-                <div className="bg-green-50 rounded-lg p-6">
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                    {ormawaData.content}
-                  </p>
+                <div className="rounded-lg">
+                  <div
+                    className="prose prose-gray max-w-none prose-headings:text-gray-800 prose-h2:text-2xl prose-h3:text-xl prose-p:text-gray-600 prose-p:mb-4 prose-li:text-gray-600 prose-strong:text-gray-800 prose-a:text-red-600 prose-a:no-underline hover:prose-a:underline"
+                    dangerouslySetInnerHTML={{ __html: ormawaData?.content }}
+                  />
                 </div>
               </div>
 
               <Separator className="my-8" />
 
-              {/* Media Section */}
-              <div className="mb-8">
-                <div className="flex items-center gap-2 mb-6">
-                  <ImageIcon className="w-5 h-5 text-purple-600" />
-                  <h2 className="text-xl font-semibold text-gray-800">Event</h2>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Icon */}
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-purple-300 transition-colors">
-                    <CardContent className="p-6">
-                      <div className="text-center">
-                        <div className="mb-4">
-                          {ormawaData.icon ? (
-                            <img
-                              src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${ormawaData.icon}`}
-                              alt="Icon"
-                              className="w-24 h-24 object-contain mx-auto rounded-lg shadow-md"
-                            />
-                          ) : (
-                            <div className="w-24 h-24 mx-auto flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg">
-                              <ImageIcon className="w-8 h-8 text-gray-400" />
-                            </div>
-                          )}
-                        </div>
-                        <h3 className="font-semibold text-gray-800 mb-1">
-                          Icon Ormawa
-                        </h3>
-                        <p className="text-sm text-gray-500">
-                          {ormawaData.icon ? "Icon tersedia" : "Tidak ada icon"}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Background */}
-                  <Card className="border-2 border-dashed border-gray-200 hover:border-blue-300 transition-colors">
-                    <CardContent className="p-6">
-                      <div className="text-center">
-                        <div className="mb-4">
-                          {ormawaData.background ? (
-                            <img
-                              src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${ormawaData.background}`}
-                              alt="Background"
-                              className="w-32 h-20 object-cover mx-auto rounded-lg shadow-md"
-                            />
-                          ) : (
-                            <div className="w-32 h-20 mx-auto flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg">
-                              <ImageIcon className="w-6 h-6 text-gray-400" />
-                            </div>
-                          )}
-                        </div>
-                        <h3 className="font-semibold text-gray-800 mb-1">
-                          Background
-                        </h3>
-                        <p className="text-sm text-gray-500">
-                          {ormawaData.background
-                            ? "Background tersedia"
-                            : "Tidak ada background"}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-
               {/* Registration Status Card */}
               <Card
                 className={`border-2 ${
-                  ormawaData.isOpenRegistration
-                    ? "border-green-200 bg-green-50"
-                    : "border-red-200 bg-red-50"
+                  ormawaData.isOpenRegistration ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"
                 }`}
               >
                 <CardContent className="p-6">
@@ -276,16 +175,8 @@ export default function OrmawaDetailPage() {
                         <XCircle className="w-8 h-8 text-red-600" />
                       )}
                       <div>
-                        <h3 className="font-semibold text-lg text-gray-800">
-                          Status Pendaftaran
-                        </h3>
-                        <p
-                          className={`text-sm ${
-                            ormawaData.isOpenRegistration
-                              ? "text-green-600"
-                              : "text-red-600"
-                          }`}
-                        >
+                        <h3 className="font-semibold text-lg text-gray-800">Status Pendaftaran</h3>
+                        <p className={`text-sm ${ormawaData.isOpenRegistration ? "text-green-600" : "text-red-600"}`}>
                           {ormawaData.isOpenRegistration
                             ? "Pendaftaran sedang dibuka untuk anggota baru"
                             : "Pendaftaran saat ini ditutup"}
